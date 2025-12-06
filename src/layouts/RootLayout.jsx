@@ -25,7 +25,7 @@ const RootLayout = () => {
         <div className='flex flex-col h-screen'>
             {showLoader && <PageLoader />}
             <Navbar />
-            <div className='flex-1 mt-20'>
+            <div className='flex-1 mt-30'>
                 <Outlet />
             </div>
             <Footer />
