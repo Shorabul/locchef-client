@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoSunnySharp, IoMoonSharp } from "react-icons/io5";
 import { IoMdDesktop } from "react-icons/io";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 
-
-const THEME_KEY = "theme"; // 'light' | 'dark' | null (system)
+const THEME_KEY = "theme";
 
 export default function ThemeToggle() {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState(localStorage.getItem(THEME_KEY) ?? "system");
+    const ref = useRef(null);
 
     useEffect(() => {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -36,45 +37,90 @@ export default function ThemeToggle() {
         }
     }, [mode]);
 
+    // Close when clicking outside
+    useEffect(() => {
+        const handler = (e) => {
+            if (ref.current && !ref.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, []);
+
     const label =
         mode === "system"
             ? "System"
             : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
 
+    const CurrentIcon =
+        mode === "system" ? IoMdDesktop : mode === "light" ? IoSunnySharp : IoMoonSharp;
+
     return (
-        <div className="relative inline-block text-left">
+        <div ref={ref} className="relative inline-block text-left select-none">
+            {/* Button */}
             <button
-                className="px-2 py-1 border rounded bg-neutral-100"
+                className="px-3 py-1.5 flex items-center gap-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-black/40 backdrop-blur-md shadow-sm hover:shadow transition active:scale-95"
                 onClick={() => setOpen((o) => !o)}
             >
-                {label}
+                <Motion.div
+                    key={mode}
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    <CurrentIcon className="text-xl" />
+                </Motion.div>
+
+                <span className="text-sm font-medium dark:text-gray-100">{label}</span>
             </button>
 
-            {open && (
-                <div className="absolute right-0 mt-2 w-44 rounded-md border bg-white dark:bg-gray-100 shadow-lg">
-                    <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-500 flex items-center gap-2"
-                        onClick={() => setMode("system")}
+            {/* Dropdown */}
+            <AnimatePresence>
+                {open && (
+                    <Motion.div
+                        initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md shadow-xl overflow-hidden"
                     >
-                        <IoMdDesktop />
-                        <span>System</span>
-                    </button>
-                    <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
-                        onClick={() => setMode("light")}
-                    >
-                        <IoSunnySharp />
-                        <span>Light</span>
-                    </button>
-                    <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
-                        onClick={() => setMode("dark")}
-                    >
-                        <IoMoonSharp />
-                        <span>Dark</span>
-                    </button>
-                </div>
-            )}
+                        {/* Option */}
+                        <button
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+                            onClick={() => {
+                                setMode("system");
+                                setOpen(false);
+                            }}
+                        >
+                            <IoMdDesktop />
+                            <span className="text-sm">System</span>
+                        </button>
+
+                        <button
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+                            onClick={() => {
+                                setMode("light");
+                                setOpen(false);
+                            }}
+                        >
+                            <IoSunnySharp />
+                            <span className="text-sm">Light</span>
+                        </button>
+
+                        <button
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
+                            onClick={() => {
+                                setMode("dark");
+                                setOpen(false);
+                            }}
+                        >
+                            <IoMoonSharp />
+                            <span className="text-sm">Dark</span>
+                        </button>
+                    </Motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
