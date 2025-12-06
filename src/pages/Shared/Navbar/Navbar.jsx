@@ -34,18 +34,42 @@ const Navbar = () => {
     //     });
     // };
 
-    const hangleLogOut = async () => {
-        await axiosSecure.patch(`/users/${user.email}`, { status: "inactive" });
-        logOut();
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "You have successfully logged out",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    };
+    // const hangleLogOut = async () => {
+    //     await axiosSecure.patch(`/users/${user.email}`, { status: "inactive" });
+    //     logOut();
+    //     Swal.fire({
+    //         position: "top-end",
+    //         icon: "success",
+    //         title: "You have successfully logged out",
+    //         showConfirmButton: false,
+    //         timer: 1500
+    //     });
+    // };
 
+    const handleLogOut = async () => {
+        try {
+            const email = user?.email;
+
+            if (email) {
+                // Update user status to "inactive" in backend
+                await axiosSecure.patch(`/users/${email}`, { status: "inactive" });
+            }
+
+            // Log out from Firebase
+            await logOut();
+
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "You have successfully logged out",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } catch (error) {
+            console.error("Logout failed:", error);
+            alert("Failed to log out. Try again.");
+        }
+    };
 
     // Close menu when screen becomes large
     useEffect(() => {
@@ -121,7 +145,7 @@ const Navbar = () => {
                                                 </p>
 
                                                 <button
-                                                    onClick={hangleLogOut}
+                                                    onClick={handleLogOut}
                                                     className="mt-3 w-full py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-500 transition"
                                                 >
                                                     Logout

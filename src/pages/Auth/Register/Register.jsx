@@ -54,56 +54,49 @@ const Register = () => {
         return map[error.code] || error.message;
     };
 
-    // Upload image
-    const uploadImage = async (file) => {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
-
-        const res = await axios.post(url, formData);
-        return res.data.data.url;
-    };
-
-    // Save to backend
-    const saveUserInDB = async (userInfo) => {
-        await axiosSecure.post("/users", userInfo);
-    };
-
-    // Main submit handler
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
-            setLoading(true);
+            // Register user in Firebase
+            const firebaseUser = await registerUser(data.email, data.password);
 
-            await registerUser(data.email, data.password);
+            // Upload profile image
+            const formData = new FormData();
+            formData.append("image", data.photo[0]);
+            const imgRes = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`,
+                formData
+            );
+            const photoURL = imgRes.data.data.url;
 
-            const photoURL = await uploadImage(data.photo[0]);
-
-            await saveUserInDB({
+            // Save user in backend with status "active"
+            const userInfo = {
                 email: data.email,
                 displayName: data.name,
                 photoURL,
-                status: 'active',
-            });
+                status: "active",
+            };
+            await axiosSecure.post("/users", userInfo);
 
-            await updateUserProfile({
-                displayName: data.name,
-                photoURL,
-            });
+            // Update Firebase profile
+            await updateUserProfile({ displayName: data.name, photoURL });
 
+            // Navigate to home or previous route
             navigate(location?.state || '/');
-
         } catch (error) {
             const errMsg = getFirebaseErrorMessage(error);
             if (error.code?.includes("email")) {
                 setError("email", { type: "firebase", message: errMsg });
+            } else if (error.code === "auth/weak-password") {
+                setError("password", { type: "firebase", message: errMsg });
             } else {
-                alert(errMsg);
+                console.log(errMsg);
             }
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <Motion.div

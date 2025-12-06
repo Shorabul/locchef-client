@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { LuMail, LuLock, LuChevronRight } from "react-icons/lu";
 import { motion as Motion } from "framer-motion";
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 // Reusable animated input wrapper
 const AnimatedInput = ({ icon: Icon, error, touched, children }) => (
@@ -31,6 +32,7 @@ const Login = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const axiosSecure = useAxiosSecure();
 
     const { register, handleSubmit, formState: { errors, touchedFields }, setError } = useForm({ mode: "onChange" });
 
@@ -51,24 +53,36 @@ const Login = () => {
         return map[error.code] || error.message || "An unexpected error occurred.";
     };
 
+    // login handler
     const onSubmit = async (data) => {
         setLoading(true);
         try {
-            await logInUser(data.email, data.password);
+            // Log in user
+            const loggedInUser = await logInUser(data.email, data.password);
+
+            // Get the email reliably
+            const email = loggedInUser.user?.email || data.email;
+
+            // Update user status to "active" in backend
+            await axiosSecure.patch(`/users/${email}`, { status: "active" });
+
+            // Navigate after successful login
             navigate(location?.state || '/');
         } catch (error) {
             const errMsg = getFirebaseLoginErrorMessage(error);
+
             if (error.code?.includes("email")) {
                 setError("email", { type: "firebase", message: errMsg });
             } else if (error.code === "auth/wrong-password") {
                 setError("password", { type: "firebase", message: errMsg });
             } else {
-                alert(errMsg);
+                console.log(errMsg);
             }
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <Motion.div
