@@ -1,5 +1,7 @@
-// src/components/ThemeToggle.jsx
 import { useEffect, useState } from "react";
+import { IoSunnySharp, IoMoonSharp } from "react-icons/io5";
+import { IoMdDesktop } from "react-icons/io";
+
 
 const THEME_KEY = "theme"; // 'light' | 'dark' | null (system)
 
@@ -36,37 +38,40 @@ export default function ThemeToggle() {
 
     const label =
         mode === "system"
-            ? "Theme: System (Default)"
-            : `Theme: ${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
+            ? "System"
+            : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
 
     return (
         <div className="relative inline-block text-left">
             <button
-                className="px-3 py-2 border rounded bg-gray-100 dark:bg-gray-800 dark:text-white"
+                className="px-2 py-1 border rounded bg-neutral-100"
                 onClick={() => setOpen((o) => !o)}
             >
                 {label}
             </button>
 
             {open && (
-                <div className="absolute right-0 mt-2 w-44 rounded-md border bg-white dark:bg-gray-900 shadow-lg">
+                <div className="absolute right-0 mt-2 w-44 rounded-md border bg-white dark:bg-gray-100 shadow-lg">
                     <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-500 flex items-center gap-2"
                         onClick={() => setMode("system")}
                     >
-                        System (Default)
+                        <IoMdDesktop />
+                        <span>System</span>
                     </button>
                     <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
                         onClick={() => setMode("light")}
                     >
-                        Light
+                        <IoSunnySharp />
+                        <span>Light</span>
                     </button>
                     <button
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
                         onClick={() => setMode("dark")}
                     >
-                        Dark
+                        <IoMoonSharp />
+                        <span>Dark</span>
                     </button>
                 </div>
             )}
