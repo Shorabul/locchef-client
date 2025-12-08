@@ -15,6 +15,7 @@ import PlatformStatistics from "../pages/Dashboard/Admin/PlatformStatistics";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Dashboard/Profile";
 import PrivateRoute from "./PrivateRoute";
+import UpdateMeal from "../pages/Dashboard/Chef/UpdateMeal";
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
             { path: "create-meal", element: <CreateMeal /> },
             { path: "my-meals", element: <MyMeals /> },
             { path: "order-requests", element: <OrderRequests /> },
+            { path: "meal-update/:id", element: <UpdateMeal /> },
 
             // Admin Routes
             { path: "manage-users", element: <ManageUsers /> },

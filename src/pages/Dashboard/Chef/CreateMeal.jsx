@@ -88,12 +88,6 @@ const CreateMeal = () => {
             }
 
         } catch (err) {
-            // Swal.fire({
-            //     icon: "error",
-            //     title: "Oops...",
-            //     text: "Failed to create meal",
-            //     confirmButtonColor: "#ffcc00",
-            // });
             console.log(err);
         }
     };
