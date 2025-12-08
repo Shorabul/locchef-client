@@ -46,14 +46,19 @@ const Navbar = () => {
 
     const links = (
         <>
-            <NavLink to='/' className="px-4 py-3 hover:text-yellow-500 transition">Home</NavLink>
-            <NavLink to='/meals' className="px-4 py-3 hover:text-yellow-500 transition">Meals</NavLink>
-            {user && <NavLink to='/dashboard' className="px-4 py-3 hover:text-yellow-500 transition">Dashboard</NavLink>
-            }        </>
+            <NavLink to='/'
+                className="px-4 py-3 hover:text-yellow-500 transition">Home</NavLink>
+            <NavLink to='/meals'
+                className="px-4 py-3 hover:text-yellow-500 transition">Meals</NavLink>
+            {
+                user && <NavLink to='/dashboard'
+                    className="px-4 py-3 hover:text-yellow-500 transition">Dashboard</NavLink>
+            }
+        </>
     );
 
     return (
-        <div className="fixed w-full z-20 backdrop-blur-xl bg-white/60 dark:bg-black/40 border-b border-white/20 dark:border-white/10 shadow-sm">
+        <div className="fixed w-full z-20 backdrop-blur-xl shadow-sm text-neutral-700 dark:text-neutral-50">
             <div className="py-3">
                 <Container>
                     <nav className="w-full flex items-center justify-between relative">
@@ -67,13 +72,13 @@ const Navbar = () => {
                                 alt=""
                                 className="rounded-full shadow-sm"
                             />
-                            <span className="hidden md:block font-bold text-xl text-gray-800 dark:text-white">
+                            <span className="hidden md:block font-bold text-xl">
                                 Local Chef's Bazaar
                             </span>
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center gap-7 text-gray-800 dark:text-gray-200 font-medium">
+                        <div className="hidden md:flex items-center gap-7 font-medium">
                             {links}
                         </div>
 
@@ -90,7 +95,7 @@ const Navbar = () => {
                                         alt=""
                                     />
 
-                                    {/* Animated Profile Dropdown */}
+                                    {/* Profile Dropdown */}
                                     <AnimatePresence>
                                         {profileToggle && (
                                             <Motion.div
@@ -98,10 +103,10 @@ const Navbar = () => {
                                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                                 exit={{ opacity: 0, scale: 0.8, y: -10 }}
                                                 transition={{ duration: 0.15 }}
-                                                className="absolute right-0 mt-3 w-56 bg-white dark:bg-neutral-900 shadow-xl rounded-xl p-4 border border-gray-200/50 dark:border-neutral-700"
+                                                className="absolute right-0 mt-3 w-56 text-neutral-700 dark:text-neutral-50 bg-neutral-50 dark:bg-neutral-700 shadow-xl rounded-xl p-4"
                                             >
                                                 <h1 className="font-semibold">{user.displayName}</h1>
-                                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                <p className="text-sm">
                                                     {user.email}
                                                 </p>
 
@@ -152,7 +157,7 @@ const Navbar = () => {
                             </div>
                         </div>
 
-                        {/* Animated Mobile Menu */}
+                        {/* Mobile Menu */}
                         <AnimatePresence>
                             {menutoggle && (
                                 <Motion.div

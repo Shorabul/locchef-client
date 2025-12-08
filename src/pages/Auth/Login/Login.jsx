@@ -73,7 +73,9 @@ const Login = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="max-w-sm mx-auto my-10 space-y-5"
+            className="max-w-sm mx-auto my-10 space-y-5 
+            text-neutral-700
+            dark:text-neutral-50"
         >
             {/* Header */}
             <Motion.div
@@ -83,7 +85,8 @@ const Login = () => {
                 className="space-y-2"
             >
                 <h1 className="font-bold text-4xl">Welcome back</h1>
-                <div className="flex gap-2 text-gray-500">
+                <div className="flex gap-2 text-neutral-600
+            dark:text-neutral-100">
                     <p>Don’t have an account?</p>
                     <Link to="/register" className="underline">Create an account</Link>
                 </div>
@@ -105,7 +108,10 @@ const Login = () => {
                             required: "Email is required",
                             pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
                         })}
-                        className="w-full pl-10 py-3 border rounded-lg"
+                        className="w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500"
                     />
                 </AnimatedInput>
                 {errors.email && <Motion.p
@@ -129,7 +135,10 @@ const Login = () => {
                             required: "Password is required",
                             minLength: { value: 6, message: "Password must be at least 6 characters" },
                         })}
-                        className="w-full pl-10 py-3 border rounded-lg"
+                        className="w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500"
                     />
                 </AnimatedInput>
                 {errors.password && <Motion.p
@@ -146,7 +155,7 @@ const Login = () => {
                     whileHover={{ scale: 1.02 }}
                     type="submit"
                     disabled={loading}
-                    className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-yellow-400 font-semibold transition ${loading ? "opacity-60" : ""}`}
+                    className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-yellow-400 text-black hover:bg-yellow-500 font-semibold transition cursor-pointer ${loading ? "opacity-60" : ""}`}
                 >
                     Login
                     <LuChevronRight />

@@ -24,7 +24,7 @@ const Register = () => {
     // Redirect if logged in
     useEffect(() => {
         if (user) navigate("/", { replace: true });
-    }, [user]);
+    }, [user, navigate]);
 
     // Firebase error parse
     const getFirebaseErrorMessage = (error) => {
@@ -94,7 +94,9 @@ const Register = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="max-w-sm mx-auto my-10 space-y-5"
+            className="max-w-sm mx-auto my-10 space-y-5
+            text-neutral-700
+            dark:text-neutral-50"
         >
             {/* Header */}
             <Motion.div
@@ -104,7 +106,8 @@ const Register = () => {
                 className="space-y-2"
             >
                 <h1 className="font-bold text-4xl">Create an account</h1>
-                <div className="flex gap-2 text-gray-500">
+                <div className="flex gap-2 text-neutral-600
+            dark:text-neutral-100">
                     <p>Already have an account?</p>
                     <Link to="/login" className="underline">Log in</Link>
                 </div>
@@ -123,7 +126,10 @@ const Register = () => {
                         type="text"
                         placeholder="Full Name"
                         {...register("name", { required: "Name is required" })}
-                        className="w-full pl-10 py-3 rounded-lg border border-gray-300"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
                 {errors.name && <p className="text-red-600 text-xs">{errors.name.message}</p>}
@@ -137,7 +143,10 @@ const Register = () => {
                     <input
                         type="file"
                         {...register("photo", { required: "Photo is required" })}
-                        className="w-full pl-10 py-3 rounded-lg border border-gray-300"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
                 {errors.photo && <p className="text-red-600 text-xs">{errors.photo.message}</p>}
@@ -152,7 +161,10 @@ const Register = () => {
                         type="text"
                         placeholder="Address"
                         {...register("address", { required: "Address is required" })}
-                        className="w-full pl-10 py-3 rounded-lg border border-gray-300"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
                 {errors.address && <p className="text-red-600 text-xs">{errors.address.message}</p>}
@@ -173,7 +185,10 @@ const Register = () => {
                                 message: "Invalid email address",
                             },
                         })}
-                        className="w-full pl-10 py-3 border rounded-lg"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
 
@@ -192,7 +207,10 @@ const Register = () => {
                             required: "Password is required",
                             minLength: { value: 6, message: "Min 6 characters" }
                         })}
-                        className="w-full pl-10 py-3 rounded-lg border border-gray-300"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
                 {errors.password && <p className="text-red-600 text-xs">{errors.password.message}</p>}
@@ -211,7 +229,10 @@ const Register = () => {
                             validate: (value) =>
                                 value === password || "Passwords do not match"
                         })}
-                        className="w-full pl-10 py-3 rounded-lg border border-gray-300"
+                        className='w-full pl-10 py-3 border rounded-lg
+                        bg-neutral-50
+                        dark:bg-neutral-700
+                        border-gray-300 dark:border-gray-500'
                     />
                 </AnimatedInput>
                 {errors.confirmPassword && <p className="text-red-600 text-xs">{errors.confirmPassword.message}</p>}
@@ -223,7 +244,7 @@ const Register = () => {
                     whileHover={{ scale: 1.02 }}
                     type="submit"
                     disabled={loading}
-                    className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-yellow-400 font-semibold transition ${loading ? "opacity-60" : ""}`}
+                    className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 font-semibold transition cursor-pointer ${loading ? "opacity-60" : ""}`}
                 >
                     Create an account
                     <LuChevronRight />
