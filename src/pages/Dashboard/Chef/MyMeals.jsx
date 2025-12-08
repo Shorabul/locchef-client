@@ -15,7 +15,7 @@ const MyMeals = () => {
     const { data: meals = [], refetch, isLoading, isError } = useQuery({
         queryKey: mealsKey,
         queryFn: async () => {
-            const res = await axiosSecure.get(`/meals/${user.email}`);
+            const res = await axiosSecure.get(`/meals/chef/${user.email}`);
             return res.data.data || [];
         },
         enabled: !!user?.email,

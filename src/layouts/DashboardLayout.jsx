@@ -48,9 +48,11 @@ export default function DashboardLayout() {
         <div className="flex min-h-screen">
 
             {/* Sidebar */}
-            <div
+            <div className={`${open ? "w-64" : "w-16"} transition-all duration-300 shadow-md p-5 bg-white dark:bg-gray-800`}>
+                {/* </div> */}
+                {/* <div
                 className={`${open ? "w-64" : "w-16"} transition-all duration-300 shadow-md p-5 bg-white dark:bg-gray-800`}
-            >
+            > */}
                 {/* Logo + Toggle */}
                 <div className="flex items-center justify-between mb-6">
                     <Link to="/" className="flex items-center gap-2">
@@ -100,7 +102,8 @@ export default function DashboardLayout() {
             </div>
 
             {/* Dashboard Content */}
-            <div className="flex-1">
+
+            <div className="flex-1 p-6 overflow-x-hidden">
                 <Outlet />
             </div>
         </div>

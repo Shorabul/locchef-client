@@ -90,7 +90,7 @@ const Navbar = () => {
                                 <div className="relative">
                                     <img
                                         onClick={handleProfileToggle}
-                                        className="h-10 w-10 rounded-full cursor-pointer border border-white/30 shadow-md hover:scale-105 transition"
+                                        className="h-10 w-10 rounded-full cursor-pointer hover:scale-105 transition hover:ring-2 hover:ring-yellow-400"
                                         src={user.photoURL}
                                         alt=""
                                     />
@@ -103,9 +103,9 @@ const Navbar = () => {
                                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                                 exit={{ opacity: 0, scale: 0.8, y: -10 }}
                                                 transition={{ duration: 0.15 }}
-                                                className="absolute right-0 mt-3 w-56 text-neutral-700 dark:text-neutral-50 bg-neutral-50 dark:bg-neutral-700 shadow-xl rounded-xl p-4"
+                                                className="absolute right-0 top-12 p-2 w-46 rounded-xl text-neutral-700 dark:text-neutral-50 bg-neutral-50 dark:bg-neutral-700 backdrop-blur-md shadow-xl overflow-hidden"
                                             >
-                                                <h1 className="font-semibold">{user.displayName}</h1>
+                                                <h1 className="font-semibold">{user?.displayName}</h1>
                                                 <p className="text-sm">
                                                     {user.email}
                                                 </p>
@@ -141,7 +141,7 @@ const Navbar = () => {
                             <ThemeToggle />
 
                             {/* Mobile Menu Icon */}
-                            <div className="block md:hidden text-3xl dark:text-white cursor-pointer">
+                            <div className="block md:hidden text-3xl text-neutral-700 dark:text-neutral-50 cursor-pointer">
                                 <Motion.div
                                     key={menutoggle ? "close" : "open"}
                                     initial={{ rotate: menutoggle ? -90 : 90, opacity: 0 }}

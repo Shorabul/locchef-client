@@ -73,9 +73,9 @@ const Login = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="max-w-sm mx-auto my-10 space-y-5 
+            className="max-w-sm mx-auto pt-10 space-y-5 
             text-neutral-700
-            dark:text-neutral-50"
+            dark:text-neutral-50 h-screen"
         >
             {/* Header */}
             <Motion.div
