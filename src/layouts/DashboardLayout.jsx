@@ -50,7 +50,7 @@ export default function DashboardLayout() {
             <div className="flex min-h-screen">
 
                 {/* Sidebar */}
-                <div className={`${open ? "w-64" : "w-16"} transition-all duration-300 shadow-md p-5 bg-white dark:bg-gray-800`}>
+                <div className={`${open ? "w-64" : "w-16"} transition-all duration-300 shadow-md p-5 bg-amber-50 dark:bg-neutral-700`}>
                     {/* </div> */}
                     {/* <div
                 className={`${open ? "w-64" : "w-16"} transition-all duration-300 shadow-md p-5 bg-white dark:bg-gray-800`}
