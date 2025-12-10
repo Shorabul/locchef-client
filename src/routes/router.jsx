@@ -17,6 +17,8 @@ import Profile from "../pages/Dashboard/Profile";
 import PrivateRoute from "./PrivateRoute";
 import UpdateMeal from "../pages/Dashboard/Chef/UpdateMeal";
 import Meals from "../pages/Meals/Meals";
+import MealDetails from "../pages/MealDetails/MealDetails";
+import OrderConfirm from "../pages/OrderConfirm/OrderConfirm";
 
 export const router = createBrowserRouter([
     {
@@ -24,7 +26,9 @@ export const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { index: true, element: <Home /> },
-            { path: '/meals', element: <Meals /> }
+            { path: '/meals', element: <Meals /> },
+            { path: '/meals/:id', element: <MealDetails /> },
+            { path: '/order-confirm/:id', element: <OrderConfirm /> },
         ]
     },
     { path: '/login', element: <Login />, },
