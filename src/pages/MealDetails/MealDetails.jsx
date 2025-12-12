@@ -18,7 +18,7 @@ const MealDetails = () => {
     const [newReview, setNewReview] = useState("");
     const [rating, setRating] = useState(0);
 
-    // ------------------ Fetch Meal Details ------------------
+
     const { data: mealData, isLoading } = useQuery({
         queryKey: ["meal", id],
         queryFn: async () => {
@@ -28,7 +28,7 @@ const MealDetails = () => {
     });
     const meal = mealData;
 
-    // ------------------ Fetch Reviews ------------------
+
     const { data: reviews = [] } = useQuery({
         queryKey: ["reviews", id],
         queryFn: async () => {
@@ -37,7 +37,7 @@ const MealDetails = () => {
         },
     });
 
-    // ------------------ Add Review ------------------
+
     const reviewMutation = useMutation({
         mutationFn: async (reviewData) =>
             axiosSecure.post("/reviews", reviewData),
@@ -63,7 +63,7 @@ const MealDetails = () => {
         reviewMutation.mutate({
             foodId: id,
             reviewerName: user.displayName,
-            reviewerEmail: user.email, // ✅ Send user email
+            reviewerEmail: user.email,
             reviewerImage: user.photoURL,
             rating,
             comment: newReview,
@@ -71,7 +71,6 @@ const MealDetails = () => {
         });
     };
 
-    // ------------------ Add to Favorites ------------------
     const favoriteMutation = useMutation({
         mutationFn: async (favData) => axiosSecure.post("/favorites", favData),
         onSuccess: (res) => {
@@ -209,7 +208,7 @@ const MealDetails = () => {
                         className="border border-gray-300 dark:border-gray-500 bg-neutral-50 dark:bg-neutral-600 p-4 rounded-lg mb-3 shadow-sm"
                     >
                         <div className="flex flex-col items-start">
-                            <div className="flex items-start gap-2">
+                            <div className="flex items-center gap-2">
                                 <div>
                                     <img src={rev.reviewerImage} className="w-10 h-10 rounded-full" />
                                 </div>

@@ -1,109 +1,169 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
-import 'sweetalert2/dist/sweetalert2.min.css';
+import Container from "../../../components/Shared/Container";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "../../../components/Skeleton";
+import EmptyState from "../../../components/EmptyState";
 
 const FavoriteMeals = () => {
     const { user } = useAuth();
-    const [favorites, setFavorites] = useState([]);
-    const [loading, setLoading] = useState(true);
     const axiosSecure = useAxiosSecure();
 
-    // Fetch favorite meals
-    const fetchFavorites = async () => {
-        try {
-            const response = await axiosSecure.get(
-                `/favorites?userEmail=${user.email}`
-            );
-            setFavorites(response.data.data || response.data);
-        } catch (error) {
-            console.error("Failed to fetch favorites:", error);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Failed to load favorite meals",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    const isDark = document.documentElement.classList.contains("dark");
 
-    useEffect(() => {
-        fetchFavorites();
-    }, [user.email]);
+
+    // Fetch favorite meals using React Query
+    const { data: favorites = [], isLoading, refetch } = useQuery({
+        queryKey: ["favorites", user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/favorites?userEmail=${user.email}`);
+            return res.data.data || res.data;
+        },
+        enabled: !!user?.email, // Only run when email exists
+    });
 
     // Delete a favorite meal
     const handleDelete = async (mealId) => {
-        const result = await Swal.fire({
-            title: "Are you sure?",
-            text: "Do you want to remove this meal from favorites?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "Cancel",
-        });
+        const result = await
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to remove this meal from favorites?",
+                icon: "warning",
+
+                background: isDark ? "#262626" : "#ffffff",
+                color: isDark ? "#ffffff" : "#262626",
+                iconColor: isDark ? "#facc15" : "#facc15",
+
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
+
+                confirmButtonColor: "#fb2c36",
+                cancelButtonColor: "#525252",
+            });
+
+
 
         if (result.isConfirmed) {
             try {
                 await axiosSecure.delete(`/favorites/${mealId}`);
-                setFavorites(favorites.filter((fav) => fav._id !== mealId));
+
                 Swal.fire({
+                    background: isDark ? "#262626" : "#ffffff",
+                    color: isDark ? "#ffffff" : "#262626",
                     icon: "success",
                     title: "Deleted!",
                     text: "Meal removed from favorites successfully.",
                     timer: 2000,
                     showConfirmButton: false,
                 });
+
+                refetch();
             } catch (error) {
-                console.error("Failed to delete favorite:", error);
+                console.log(error);
                 Swal.fire({
+                    title: "Error",
+                    text: "Failed to delete this favorite meal",
                     icon: "error",
-                    title: "Oops...",
-                    text: "Failed to remove meal from favorites",
+                    background: isDark ? "#262626" : "#ffffff",
+                    color: isDark ? "#ffffff" : "#262626",
+                    iconColor: isDark ? "#f87171" : "#dc2626",
+                    confirmButtonColor: "#ef4444",
                 });
             }
         }
     };
 
-    if (loading) return <div>Loading favorite meals...</div>;
-    if (favorites.length === 0) return <div>No favorite meals added yet.</div>;
+    // React Query loading state
+    if (isLoading) {
+        return (
+            <Container>
+                <div className="overflow-x-auto w-full mt-6">
+                    <table className="table w-full">
+                        <thead>
+                            <tr className="bg-[#ffde59] text-black">
+                                <th>#</th>
+                                <th>Meal Name</th>
+                                <th>Chef Name</th>
+                                <th>Price</th>
+                                <th>Date Added</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <tr key={i}>
+                                    <td><Skeleton className="h-4 w-6" /></td>
+                                    <td><Skeleton className="h-4 w-32" /></td>
+                                    <td><Skeleton className="h-4 w-28" /></td>
+                                    <td><Skeleton className="h-4 w-16" /></td>
+                                    <td><Skeleton className="h-4 w-20" /></td>
+                                    <td><Skeleton className="h-8 w-20" /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </Container>
+        );
+    }
+
+    if (!favorites.length) {
+        return <Container><EmptyState message="No favorite meals added yet." /></Container>;
+    }
+
 
     return (
-        <div className="overflow-x-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Favorite Meals</h2>
-            <table className="table w-full ">
-                <thead>
-                    <tr className="text-gray-700">
-                        <th></th>
-                        <th>Meal Name</th>
-                        <th>Chef Name</th>
-                        <th>Price</th>
-                        <th>Date Added</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {favorites.map((fav) => (
-                        <tr key={fav._id}>
-                            <td></td>
-                            <td>{fav.mealName}</td>
-                            <td>{fav.chefName}</td>
-                            <td>{fav.price ? `$${parseFloat(fav.price).toFixed(2)}` : "N/A"}</td>
-                            <td>{new Date(Number(fav.addedTime)).toLocaleDateString()}</td>
-                            <td>
-                                <button
-                                    onClick={() => handleDelete(fav._id)}
-                                    className="btn btn-sm btn-error"
-                                >
-                                    Delete
-                                </button>
-                            </td>
+        <Container>
+            <div className="overflow-x-auto w-full mt-6 bg-neutral-50 dark:bg-neutral-600">
+                <table className="table w-full">
+                    <thead>
+                        <tr className="bg-[#ffde59] text-black">
+                            <th>#</th>
+                            <th>Meal Name</th>
+                            <th>Chef Name</th>
+                            <th>Price</th>
+                            <th>Date Added</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+
+                    <tbody>
+                        {favorites.map((fav, i) => (
+                            <tr key={fav._id}>
+                                <td>{i + 1}</td>
+                                <td>{fav.mealName}</td>
+                                <td>{fav.chefName}</td>
+                                <td>
+                                    {fav.price
+                                        ? `$${parseFloat(fav.price).toFixed(2)}`
+                                        : "N/A"}
+                                </td>
+
+                                {/* date formatting */}
+                                <td>
+                                    {fav.addedTime
+                                        ? new Date(fav.addedTime).toLocaleDateString()
+                                        : "N/A"}
+                                </td>
+
+                                <td>
+                                    <button
+                                        onClick={() => handleDelete(fav._id)}
+                                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </Container>
     );
 };
 

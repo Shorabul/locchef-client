@@ -1,9 +1,7 @@
-import { Outlet, NavLink, Link } from "react-router";
+import { Outlet, NavLink, Link, useNavigation, useLocation } from "react-router";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import {
-    Menu,
-    X,
     User,
     Users,
     PlusCircle,
@@ -18,6 +16,8 @@ import ProfileDropdown from "../components/ProfileDropdown";
 import Swal from "sweetalert2";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import Container from "../components/Shared/Container";
+import PageLoader from "../pages/PageLoader/PageLoader";
+import { useEffect } from "react";
 
 
 export default function DashboardLayout() {
@@ -25,6 +25,21 @@ export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
     const [profileToggle, setProfileToggle] = useState(false);
     const handleMenuToggle = () => setOpen(!open);
+    const navigation = useNavigation();
+    const location = useLocation();
+    const [delayedLoader, setDelayedLoader] = useState(false);
+
+    useEffect(() => {
+        setDelayedLoader(true);
+
+        const timer = setTimeout(() => {
+            setDelayedLoader(false);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [location.pathname]);
+    const showLoader = navigation.state === "loading" || delayedLoader;
+
 
     const handleProfileToggle = () => setProfileToggle(!profileToggle);
 
@@ -69,10 +84,10 @@ export default function DashboardLayout() {
     const activeMenu = menuItems[role] || [];
 
     return (
-        <div className="flex min-h-screen w-full bg-gray-100 dark:bg-neutral-700">
-
+        <div className="flex min-h-screen w-full">
+            {showLoader && <PageLoader />}
             {/* Top Navbar */}
-            <nav className="fixed top-0 left-0 w-full bg-white dark:bg-neutral-800 z-50">
+            <nav className="fixed top-0 left-0 w-full z-50">
                 <Container>
                     <div className="w-full flex justify-between items-center py-3">
                         {/* Mobile Menu Icon */}
@@ -119,10 +134,9 @@ export default function DashboardLayout() {
             {/* Sidebar */}
             <div
                 className={`
-                    fixed top-0 left-0 min-h-screen z-40 dark:bg-neutral-800
-                    transition-all duration-300
-                    ${open ? "w-64 bg-white" : "w-0"} 
-                    lg:w-64 lg:static pt-18
+                    fixed top-0 left-0 min-h-screen z-40
+                    transition-all duration-300 pt-20
+                    ${open ? "w-64 bg-white dark:bg-neutral-800" : "w-0"}
                 `}
             >
                 {/* Sidebar content */}
@@ -151,7 +165,7 @@ export default function DashboardLayout() {
             </div >
 
             {/* Main Content */}
-            < div className="flex-1 pt-16 p-6 overflow-x-hidden" >
+            < div className="flex-1 pt-16 overflow-x-hidden" >
                 <Outlet />
             </div >
         </div >

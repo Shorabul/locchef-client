@@ -54,7 +54,7 @@ const Profile = () => {
 
     return (
         <Motion.div
-            className="max-w-xl mx-auto bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded-xl shadow-lg mt-8"
+            className="max-w-xl mx-auto bg-neutral-50 dark:bg-neutral-600 text-black dark:text-white p-6 rounded-xl shadow-lg mt-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -81,7 +81,7 @@ const Profile = () => {
                     <Motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`bg-brand hover:bg-yellow-400 text-black dark:text-black font-semibold py-2 px-6 rounded-md shadow ${chefRequestPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                        className={`bg-[#ffde59] hover:bg-yellow-400 text-black dark:text-black font-semibold py-2 px-6 rounded-md shadow ${chefRequestPending ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={() => handleRoleRequest("chef")}
                         disabled={chefRequestPending}
                     >

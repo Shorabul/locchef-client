@@ -5,6 +5,9 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import StarRating from "../../StarRating/StarRating";
 import { useQuery } from "@tanstack/react-query";
+import EmptyState from "../../../components/EmptyState";
+import Container from "../../../components/Shared/Container";
+import Skeleton from "../../../components/Skeleton";
 
 const MyReview = () => {
     const axiosSecure = useAxiosSecure();
@@ -15,8 +18,11 @@ const MyReview = () => {
     const [editRating, setEditRating] = useState(0);
     const [editComment, setEditComment] = useState("");
 
+    const isDark = document.documentElement.classList.contains("dark");
+
+
     // Fetch user's reviews
-    const { data: reviews = [], isLoading } = useQuery({
+    const { data: reviews = [], refetch, isLoading } = useQuery({
         queryKey: ["myReviews", user?.email],
         queryFn: async () => {
             if (!user?.email) return [];
@@ -26,10 +32,6 @@ const MyReview = () => {
         enabled: !!user?.email, // Only run if user is logged in
     });
 
-    if (isLoading) return <div className="text-center py-10">Loading...</div>;
-
-    if (!reviews.length)
-        return <div className="text-center py-10">You have not submitted any reviews yet.</div>;
 
     // Delete review
     const handleDelete = async (id) => {
@@ -37,19 +39,45 @@ const MyReview = () => {
             title: "Are you sure?",
             text: "This review will be permanently deleted!",
             icon: "warning",
+
+            background: isDark ? "#262626" : "#ffffff",
+            color: isDark ? "#ffffff" : "#262626",
+            iconColor: isDark ? "#facc15" : "#facc15",
+
             showCancelButton: true,
             confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+
+            confirmButtonColor: "#fb2c36",
+            cancelButtonColor: "#525252",
         });
 
         if (result.isConfirmed) {
             try {
                 await axiosSecure.delete(`/reviews/${id}`);
-                Swal.fire("Deleted!", "Your review has been deleted.", "success");
-                // Manual refresh: remove review locally
-                reviews.splice(reviews.findIndex((r) => r._id === id), 1);
+
+                Swal.fire({
+                    background: isDark ? "#262626" : "#ffffff",
+                    color: isDark ? "#ffffff" : "#262626",
+                    icon: "success",
+                    title: "Deleted!",
+                    text: "Your review has been deleted.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+                refetch();
+                // reviews.splice(reviews.findIndex((r) => r._id === id), 1);
             } catch (error) {
                 console.error(error);
-                Swal.fire("Error", "Failed to delete review", "error");
+                Swal.fire({
+                    title: "Error",
+                    text: "Failed to delete this review",
+                    icon: "error",
+                    background: isDark ? "#262626" : "#ffffff",
+                    color: isDark ? "#ffffff" : "#262626",
+                    iconColor: isDark ? "#f87171" : "#dc2626",
+                    confirmButtonColor: "#ef4444",
+                });
             }
         }
     };
@@ -87,63 +115,100 @@ const MyReview = () => {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="p-6 space-y-4">
+                {[1, 2, 3].map((i) => (
+                    <div
+                        key={i}
+                        className="border-gray-300 dark:border-gray-500 bg-neutral-50 dark:bg-neutral-600 p-4 rounded-lg shadow-sm"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Skeleton className="w-10 h-10 rounded-full" />
+                                <div>
+                                    <Skeleton className="h-4 w-32 mb-2" />
+                                    <Skeleton className="h-3 w-24" />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Skeleton className="h-8 w-20" />
+                                <Skeleton className="h-8 w-20" />
+                            </div>
+                        </div>
+
+                        <Skeleton className="h-4 w-full mt-4" />
+                        <Skeleton className="h-4 w-1/2 mt-2" />
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    if (!reviews.length) {
+        return <Container><EmptyState message="You have not submitted any reviews yet." /></Container>;
+    }
+
     return (
         <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">My Reviews</h2>
-
             {reviews.map((rev) => (
                 <Motion.div
                     key={rev._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="border p-4 rounded-lg mb-3 shadow-sm"
+                    className="border-gray-300 dark:border-gray-500 bg-neutral-50 dark:bg-neutral-600 p-4 rounded-lg mb-3 shadow-sm"
                 >
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <img
-                                src={rev.reviewerImage}
-                                alt={rev.reviewerName}
-                                className="w-10 h-10 rounded-full"
-                            />
+                        <div className="flex items-center gap-2">
+                            <div>
+                                <img src={rev.reviewerImage} className="w-10 h-10 rounded-full" />
+                            </div>
                             <div>
                                 <p className="font-bold">{rev.reviewerName}</p>
-                                <p className="text-gray-500 text-sm">{rev.mealName}</p>
-                                <p className="text-yellow-600">★ {rev.rating}</p>
+                                <p className="text-gray-500 dark:text-gray-300 text-sm mt-1">
+                                    {new Date(rev.date).toLocaleString()}
+                                </p>
                             </div>
                         </div>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => handleEdit(rev)}
-                                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                                className="bg-[#ffde59] text-black px-3 py-1 rounded-lg hover:bg-yellow-400"
                             >
                                 Update
                             </button>
                             <button
                                 onClick={() => handleDelete(rev._id)}
-                                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
                             >
                                 Delete
                             </button>
                         </div>
                     </div>
-                    <p className="mt-2">{rev.comment}</p>
-                    <p className="text-sm text-gray-500 mt-1">
-                        {new Date(rev.date).toLocaleString()}
-                    </p>
+                    <div>
+                        <p className="mt-2">{rev.comment}</p>
+                        <div className="flex items-center gap-1">
+                            {Array.from({ length: rev.rating }).map((_, i) => (
+                                <p key={i} className="text-yellow-400">★</p>
+                            ))}
+                            <span>{rev.rating}</span>
+                        </div>
+                    </div>
                 </Motion.div>
             ))}
 
             {/* Modal */}
             {modalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-full max-w-md relative">
+                <div className="fixed inset-0 bg-white/50 dark:bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow w-full max-w-md relative">
                         <h3 className="text-xl font-bold mb-4">Update Review</h3>
                         <p className="font-semibold mb-2">Rating:</p>
                         <StarRating rating={editRating} setRating={setEditRating} />
 
                         <p className="font-semibold mt-4 mb-2">Comment:</p>
                         <textarea
-                            className="w-full border p-3 rounded-lg"
+                            className="w-full border border-gray-300 dark:border-gray-500 p-3 rounded-lg"
                             rows={3}
                             value={editComment}
                             onChange={(e) => setEditComment(e.target.value)}
@@ -152,13 +217,13 @@ const MyReview = () => {
                         <div className="flex justify-end gap-2 mt-4">
                             <button
                                 onClick={() => setModalOpen(false)}
-                                className="px-4 py-2 rounded bg-gray-400 hover:bg-gray-500 text-white"
+                                className="px-3 py-2 rounded-lg bg-neutral-200 dark:bg-neutral-600 hover:bg-gray-400 dark:hover:bg-neutral-700"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleUpdateSubmit}
-                                className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                                className="px-3 py-2 rounded-lg bg-[#ffde59] text-black  hover:bg-yellow-400"
                             >
                                 Update
                             </button>
