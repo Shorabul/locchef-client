@@ -24,10 +24,12 @@ import PaymentCancelled from "../pages/Dashboard/User/PaymentCancelled";
 import AdminRoute from "./AdminRoute";
 import ChefRoute from "./ChefRoute";
 import AuthGate from "../components/AuthGate";
+import NotFound from "../pages/NotFound/NotFound";
 
 export const router = createBrowserRouter([
     {
         path: '/',
+        // errorElement: <NotFound />,
         element: (<AuthGate><RootLayout /></AuthGate>
         ),
         children: [
@@ -66,6 +68,9 @@ export const router = createBrowserRouter([
             { path: 'manage-requests', element: (<AdminRoute><ManageRequests /></AdminRoute>) },
             { path: 'statistics', element: (<AdminRoute><PlatformStatistics /></AdminRoute>) },
         ]
-    }
-
+    },
+    {
+        path: "*",
+        element: <NotFound />,
+    },
 ]);

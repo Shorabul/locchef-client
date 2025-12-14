@@ -61,7 +61,7 @@ const MealCard = ({ meal }) => {
                 {/* Button */}
                 <button
                     onClick={() => navigate(`/meals/${meal?._id}`)}
-                    className="mt-4 w-full bg-[#ffde59] text-black py-2 rounded-lg font-semibold hover:bg-yellow-400 transition cursor-pointer"
+                    className="mt-4 w-full bg-[#ffde59] text-black py-2 rounded-lg font-semibold hover:bg-yellow-400 transition cursor-pointer obv"
                 >
                     See Details
                 </button>

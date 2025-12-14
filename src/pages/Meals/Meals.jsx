@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Container from "../../components/Shared/Container";
 import MealCard from "../../components/Shared/MealCard";
 import { House } from "lucide-react";
 import MealCardSkeleton from "../../components/MealCardSkeleton";
 import EmptyState from "../../components/EmptyState";
-
+import { motion as Motion } from "framer-motion";
 const Meals = () => {
     useEffect(() => {
         document.title = "Meals";
     }, []);
 
-    const axiosSecure = useAxiosSecure();
+    const axiosPublic = useAxiosPublic();
 
     const [meals, setMeals] = useState([]);
     const [page, setPage] = useState(1);
@@ -25,7 +25,7 @@ const Meals = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axiosSecure.get(
+                const res = await axiosPublic.get(
                     `/meals?page=${page}&limit=${limit}&sortBy=price&order=${sortOrder}&fields=foodName,foodImage,price,rating,deliveryArea,ingredients,deliveryTime,deliveryRadius`
                 );
                 setMeals(res.data.data);
@@ -38,7 +38,45 @@ const Meals = () => {
         };
 
         fetchData();
-    }, [page, sortOrder, axiosSecure]);
+    }, [page, sortOrder, axiosPublic]);
+
+    if (loading) {
+        return (
+            <Container>
+                {/* Header Skeleton */}
+                <div className="flex flex-col items-center justify-center mb-6">
+                    <h1 className="text-center font-bold text-2xl">Meals</h1>
+                    <p className="flex gap-2">
+                        <span className="opacity-80 flex items-center gap-2">
+                            <House size={16} />Home
+                        </span>
+                        <span> / meals</span>
+                    </p>
+                </div>
+
+                {/* Sort Button Skeleton */}
+                <div className="w-full flex justify-end mb-6">
+                    <div className="h-8 w-32 animate-pulse bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Meals Grid Skeleton */}
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {[...Array(limit)].map((_, i) => (
+                        <MealCardSkeleton key={i} />
+                    ))}
+                </div>
+
+                {/* Pagination Skeleton */}
+                <div className="flex justify-center items-center gap-3 mt-8">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="h-8 w-8 animate-pulse bg-gray-300 rounded"></div>
+                    ))}
+                </div>
+
+            </Container>
+        );
+    }
+
 
     return (
         <Container>
@@ -64,9 +102,16 @@ const Meals = () => {
             </div>
 
             {/* Meals Grid */}
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
-                {loading &&
-                    [...Array(limit)].map((_, i) => <MealCardSkeleton key={i} />)}
+            <Motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+                }}
+                className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
 
                 {!loading && meals.length === 0 && (
                     <div className="col-span-full">
@@ -75,9 +120,15 @@ const Meals = () => {
                 )}
 
                 {!loading &&
-                    meals.length > 0 &&
-                    meals.map((meal) => <MealCard key={meal._id} meal={meal} />)}
-            </div>
+                    meals.map((meal) => (
+                        <Motion.div
+                            key={meal._id}
+                            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                        >
+                            <MealCard meal={meal} />
+                        </Motion.div>
+                    ))}
+            </Motion.div>
 
             {/* Pagination */}
             {!loading && meals.length > 0 && (
