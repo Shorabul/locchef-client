@@ -14,10 +14,12 @@ import {
     Legend,
 } from "recharts";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const COLORS = ["#ffde59", "#22c55e", "#3b82f6", "#ef4444"];
 
 const PlatformStatistics = () => {
+    usePageTitle('Platform Statistics');
     const axiosSecure = useAxiosSecure();
 
     const { data = {}, isLoading } = useQuery({
@@ -55,9 +57,10 @@ const PlatformStatistics = () => {
             <div className="stats shadow w-full bg-neutral-50 dark:bg-neutral-600">
                 <div className="stat place-items-center">
                     <div className="stat-title text-neutral-600 dark:text-neutral-300">Total Payments</div>
-                    <div className="stat-value text-[#ffde59]">${totalPayments}</div>
+                    <div className="stat-value text-[#ffde59]">${totalPayments.toFixed(2)}</div>
                     <div className="stat-desc text-neutral-600 dark:text-neutral-300">All time revenue</div>
                 </div>
+
 
                 <div className="stat place-items-center">
                     <div className="stat-title text-neutral-600 dark:text-neutral-300">Total Users</div>

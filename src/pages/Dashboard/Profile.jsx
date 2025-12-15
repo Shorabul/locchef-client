@@ -4,8 +4,10 @@ import { motion as Motion } from "framer-motion";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Skeleton from "../../components/Skeleton";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const Profile = () => {
+    usePageTitle('Profile');
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [userData, setUserData] = useState(null);

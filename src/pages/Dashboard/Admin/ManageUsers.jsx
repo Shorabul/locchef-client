@@ -6,8 +6,10 @@ import Skeleton from "../../../components/Skeleton";
 import EmptyState from "../../../components/EmptyState";
 import { UserCog } from "lucide-react";
 import { motion as Motion } from "framer-motion";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const ManageUsers = () => {
+    usePageTitle('Manage Users');
     const axiosSecure = useAxiosSecure();
     const isDark = document.documentElement.classList.contains("dark");
 

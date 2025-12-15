@@ -14,18 +14,8 @@ const OrderConfirm = () => {
     const [meal, setMeal] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
-    const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
-        formState: { errors },
-    } = useForm({
-        defaultValues: {
-            quantity: 1,
-            userAddress: "",
-        },
+    const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+        defaultValues: { quantity: 1, userAddress: "" }
     });
 
     const quantity = watch("quantity") || 1;
@@ -52,16 +42,12 @@ const OrderConfirm = () => {
                 setLoading(false);
             }
         };
-
         fetchMeal();
     }, [id, axiosSecure, setValue, isDark]);
 
-
     const onSubmit = async (data) => {
         if (!meal) return;
-
         const totalPrice = meal.price * data.quantity;
-
         const confirmResult = await Swal.fire({
             title: "Confirm Order",
             text: `Your total price is $${totalPrice}. Do you want to place this order?`,
@@ -121,72 +107,69 @@ const OrderConfirm = () => {
     if (!meal) return <div className="text-center py-10">Meal not found</div>;
 
     return (
-        <div className="max-w-2xl mx-auto p-6 text-neutral-700">
-            <h1 className="text-3xl font-bold mb-4">Confirm Your Order</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {/* Meal Name */}
-                <div>
-                    <label className="font-semibold">Meal Name:</label>
-                    <input
-                        type="text"
-                        value={meal.foodName}
-                        readOnly
-                        className="w-full border p-2 rounded"
-                    />
+        <div className="max-w-3xl mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">Confirm Your Order</h1>
+
+            <div className="bg-white dark:bg-neutral-700 shadow-lg rounded-xl p-6 space-y-6">
+                {/* Meal Preview */}
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                    <img src={meal.foodImage} alt={meal.foodName} className="w-full md:w-48 h-48 object-cover rounded-lg shadow-md" />
+                    <div className="flex-1 space-y-3">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{meal.foodName}</h2>
+                        <p className="text-gray-600 dark:text-gray-300 font-semibold">Price: <span className="text-yellow-500">${meal.price}</span></p>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">{meal.ingredients.join(", ")}</p>
+                    </div>
                 </div>
 
-                {/* Price */}
-                <div>
-                    <label className="font-semibold">Price:</label>
-                    <input
-                        type="text"
-                        value={`$${meal.price}`}
-                        readOnly
-                        className="w-full border p-2 rounded"
-                    />
-                </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {/* Quantity Selector */}
+                    <div>
+                        <label className="font-semibold text-gray-700 dark:text-gray-200">Quantity:</label>
+                        <div className="flex items-center gap-2 mt-2">
+                            <button
+                                type="button"
+                                onClick={() => setValue("quantity", quantity > 1 ? quantity - 1 : 1)}
+                                className="px-4 py-2 bg-gray-200 dark:bg-neutral-600 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-500 font-bold"
+                            >
+                                -
+                            </button>
+                            <span className="px-6 py-2 border rounded-lg text-center bg-gray-50 dark:bg-neutral-800">{quantity}</span>
+                            <button
+                                type="button"
+                                onClick={() => setValue("quantity", quantity + 1)}
+                                className="px-4 py-2 bg-gray-200 dark:bg-neutral-600 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-500 font-bold"
+                            >
+                                +
+                            </button>
+                        </div>
+                        {errors.quantity && <p className="text-red-500 text-sm mt-1">Quantity must be at least 1</p>}
+                    </div>
 
-                {/* Quantity */}
-                <div>
-                    <label className="font-semibold">Quantity:</label>
-                    <input
-                        type="number"
-                        min={1}
-                        {...register("quantity", { required: true, min: 1 })}
-                        className="w-full border p-2 rounded"
-                    />
-                    {errors.quantity && (
-                        <p className="text-red-500 text-sm">Quantity must be at least 1</p>
-                    )}
-                </div>
+                    {/* Total Price */}
+                    <div className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Total Price: <span className="text-yellow-500">${(meal.price * quantity).toFixed(2)}</span>
+                    </div>
 
-                {/* Total Price */}
-                <div>
-                    <p className="font-semibold">
-                        Total Price: <span>${meal.price * quantity}</span>
-                    </p>
-                </div>
+                    {/* Address */}
+                    <div>
+                        <label className="font-semibold text-gray-700 dark:text-gray-200">Delivery Address:</label>
+                        <textarea
+                            {...register("userAddress", { required: true })}
+                            className="w-full border rounded-lg p-3 mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            placeholder="Enter your delivery address"
+                        />
+                        {errors.userAddress && <p className="text-red-500 text-sm mt-1">Address is required</p>}
+                    </div>
 
-                {/* Address */}
-                <div>
-                    <label className="font-semibold">Delivery Address:</label>
-                    <textarea
-                        {...register("userAddress", { required: true })}
-                        className="w-full border p-2 rounded"
-                        placeholder="Enter your delivery address"
-                    />
-                    {errors.userAddress && (
-                        <p className="text-red-500 text-sm">Address is required</p>
-                    )}
-                </div>
-
-                <button
-                    type="submit"
-                    className="bg-yellow-400 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-500"
-                >
-                    Confirm Order
-                </button>
-            </form>
+                    {/* Confirm Button */}
+                    <button
+                        type="submit"
+                        className="w-full py-3 bg-yellow-400 dark:bg-yellow-500 rounded-lg text-black font-bold hover:bg-yellow-500 dark:hover:bg-yellow-600 transition"
+                    >
+                        Confirm Order
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

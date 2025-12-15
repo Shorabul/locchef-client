@@ -14,7 +14,7 @@ const ReviewCard = ({ review }) => {
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.2 }}
-            className="bg-white dark:bg-neutral-700 shadow-lg rounded-xl w-[300px] p-10 flex flex-col gap-4"
+            className="bg-white dark:bg-neutral-700 shadow-lg rounded-xl w-[300px] p-5 flex flex-col gap-4"
         >
             {/* Comma Icons */}
             <div className="flex mb-2">

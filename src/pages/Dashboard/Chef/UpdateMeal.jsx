@@ -7,8 +7,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import axios from "axios";
 import Skeleton from "../../../components/Skeleton";
 import { LayoutDashboard } from "lucide-react";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const UpdateMeal = () => {
+    usePageTitle('Update Meal');
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { register, handleSubmit, setValue } = useForm();

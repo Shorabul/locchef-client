@@ -8,8 +8,11 @@ import AnimatedInput from '../AnimatedInput';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { Eye, EyeOff } from 'lucide-react';
+import { usePageTitle } from '../../../hooks/usePageTitle';
 
 const Login = () => {
+    usePageTitle("Login");
+
     const { logInUser, user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const location = useLocation();

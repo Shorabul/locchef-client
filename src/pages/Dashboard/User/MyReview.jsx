@@ -9,8 +9,10 @@ import EmptyState from "../../../components/EmptyState";
 import Skeleton from "../../../components/Skeleton";
 import { LayoutDashboard } from "lucide-react";
 import { FaStar } from "react-icons/fa";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const MyReview = () => {
+    usePageTitle('My Review');
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 

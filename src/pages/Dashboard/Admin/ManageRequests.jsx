@@ -6,8 +6,10 @@ import Skeleton from "../../../components/Skeleton";
 import EmptyState from "../../../components/EmptyState";
 import { UserCog } from "lucide-react";
 import { motion as Motion } from "framer-motion";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const ManageRequests = () => {
+    usePageTitle('Manage Requests');
     const axiosSecure = useAxiosSecure();
 
     const { data: requests = [], refetch, isLoading } = useQuery({

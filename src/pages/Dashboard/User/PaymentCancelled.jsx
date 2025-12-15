@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { usePageTitle } from '../../../hooks/usePageTitle';
 
 const PaymentCancelled = () => {
+    usePageTitle('Payment Cancelled');
     return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-5">
             <h2 className="text-3xl font-semibold text-red-500 mb-4">

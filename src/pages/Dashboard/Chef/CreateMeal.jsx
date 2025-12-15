@@ -7,8 +7,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import axios from "axios";
 import { LayoutDashboard } from "lucide-react";
 import Skeleton from "../../../components/Skeleton";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const CreateMeal = () => {
+    usePageTitle('Create Meal');
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [userData, setUserData] = useState(null);
@@ -236,10 +238,13 @@ const CreateMeal = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input
                             type="number"
+                            step="0.01"
+                            min="0"
                             placeholder="Price"
                             {...register("price", { required: true })}
                             className="px-3 py-2 rounded-lg border bg-white dark:bg-neutral-800"
                         />
+
                         <input
                             type="text"
                             placeholder="Delivery Time (minutes)"

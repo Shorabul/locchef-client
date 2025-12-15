@@ -29,7 +29,6 @@ const PopularMeals = () => {
 
         fetchMeals();
     }, [axiosPublic]);
-    console.log(meals);
     if (loading) {
         return (
             <Container>
@@ -63,7 +62,6 @@ const PopularMeals = () => {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
                     className="text-center mb-10"
                 >
                     <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold flex justify-center items-center gap-2">
@@ -79,7 +77,6 @@ const PopularMeals = () => {
                 <Motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true }}
                     variants={{
                         hidden: { opacity: 0 },
                         visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
@@ -99,7 +96,9 @@ const PopularMeals = () => {
                                 key={meal._id}
                                 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                             >
-                                <MealCard meal={meal} />
+                                <div className="w-full flex justify-center">
+                                    <MealCard meal={meal} className="w-full mx-auto" />
+                                </div>
                             </Motion.div>
                         ))}
                 </Motion.div>

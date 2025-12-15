@@ -8,8 +8,10 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Skeleton from "../../../components/Skeleton";
 import EmptyState from "../../../components/EmptyState";
 import { LayoutDashboard } from "lucide-react";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const MyMeals = () => {
+    usePageTitle('My Meals');
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -162,7 +164,7 @@ const MyMeals = () => {
                             {/* Meal Information */}
                             <h2 className="text-xl font-bold mb-1">{meal.foodName}</h2>
 
-                            <div className="text-gray-500 dark:text-gray-300 text-sm space-y-1">
+                            {/* <div className="text-gray-500 dark:text-gray-300 text-sm space-y-1">
                                 {Object.entries(meal).map(([key, value]) => {
                                     // Skip unwanted fields
                                     if (key === "_id" || key === "foodImage") return null;
@@ -181,7 +183,23 @@ const MyMeals = () => {
                                         </p>
                                     );
                                 })}
+                            </div> */}
+                            {/* Meal Information */}
+                            <div className="text-gray-700 dark:text-gray-200 text-sm space-y-1">
+                                <p><strong>Chef Id:</strong> {meal.chefId}</p>
+                                <p><strong>Chef Name:</strong> {meal.chefName}</p>
+                                <p><strong>Chef Email:</strong> {meal.chefEmail}</p>
+                                <p><strong>Food Name:</strong> {meal.foodName}</p>
+                                <p><strong>Ingredients:</strong> {meal.ingredients?.join(", ")}</p>
+                                <p><strong>Price:</strong> ${meal.price}</p>
+                                <p><strong>Chef Experience:</strong> {meal.chefExperience}</p>
+                                <p><strong>Delivery Time:</strong> {meal.deliveryTime}</p>
+                                <p><strong>Delivery Area:</strong> {meal.deliveryArea}</p>
+                                <p><strong>Delivery Radius:</strong> {meal.deliveryRadius}</p>
+                                <p><strong>Rating:</strong> {meal.rating}</p>
+                                <p><strong>Date:</strong> {new Date(meal.createAt).toLocaleString()}</p>
                             </div>
+
 
                             {/* Actions */}
                             <div className="flex gap-2 mt-4">

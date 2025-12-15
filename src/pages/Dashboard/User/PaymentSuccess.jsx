@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { usePageTitle } from '../../../hooks/usePageTitle';
 
 
 const PaymentSuccess = () => {
+    usePageTitle('Payment Success');
     const [searchParams] = useSearchParams();
     const [paymentInfo, setPaymentInfo] = useState({});
     const [loading, setLoading] = useState(true);

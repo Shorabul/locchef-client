@@ -32,7 +32,7 @@ const Footer = () => {
                             className="w-32 mb-4"
                         />
                         <p className="text-gray-300 max-w-xs">
-                            LocChef is your gateway to delicious homemade meals from local chefs. Fresh, healthy, and made with love.
+                            Locchef is your gateway to delicious homemade meals from local chefs. Fresh, healthy, and made with love.
                         </p>
                     </Motion.div>
 
@@ -41,7 +41,7 @@ const Footer = () => {
                         <h3 className="text-lg font-bold mb-4" style={{ color: "#ffde59" }}>
                             Contact Us
                         </h3>
-                        <p>Email: support@localchefbazaar.com</p>
+                        <p>Email: support@locchef.com</p>
                         <p>Phone: +123 456 7890</p>
                         <p>Address: 123 Chef Street, Food City</p>
                     </Motion.div>

@@ -7,8 +7,10 @@ import { LayoutDashboard } from "lucide-react";
 import Skeleton from "../../../components/Skeleton";
 import EmptyState from "../../../components/EmptyState";
 import { motion as Motion } from "framer-motion";
+import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const FavoriteMeals = () => {
+    usePageTitle('Favorite Meals');
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 

@@ -10,9 +10,11 @@ import { motion as Motion } from "framer-motion";
 import AnimatedInput from '../AnimatedInput';
 import Swal from 'sweetalert2';
 import { Eye, EyeOff } from 'lucide-react';
+import { usePageTitle } from '../../../hooks/usePageTitle';
 
 
 const Register = () => {
+    usePageTitle("Register");
     const { registerUser, updateUserProfile, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();

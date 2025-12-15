@@ -22,7 +22,10 @@ import {
     Star,
 } from "lucide-react";
 
+
+
 export default function DashboardLayout() {
+
     const { user, backendData, logOut } = useAuth();
     const [open, setOpen] = useState(false);
     const [profileToggle, setProfileToggle] = useState(false);

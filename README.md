@@ -1,16 +1,104 @@
-# React + Vite
+# Locchef
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Purpose
 
-Currently, two official plugins are available:
+Locchef is a full-stack MERN marketplace that connects local home chefs with customers looking for fresh, homemade meals. The platform enables users to browse meals, place orders, make secure payments, track deliveries, and leave reviews, while chefs can manage meals and orders. Admins oversee users, requests, orders, and platform-wide statistics.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is designed to demonstrate real-world application development skills, including authentication, role-based access control, secure payments, and dashboard analytics.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Live URL
 
-## Expanding the ESLint configuration
+🔗 **Url:** <YOUR_LIVE_CLIENT_URL>
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Key Features
+
+### 🔐 Authentication & Security
+
+* Firebase email/password authentication
+* JWT-based secure API access (httpOnly cookies)
+* Role-based route protection (Admin / Chef / User)
+* Environment variable protection for Firebase & MongoDB
+
+### 👥 User Roles
+
+* **Admin:** Manage users, requests, orders, and platform statistics
+* **Chef:** Create and manage meals, handle order requests
+* **User:** Browse meals, place orders, make payments, leave reviews
+
+### 🍽️ Meals & Orders
+
+* Dynamic daily meals with sorting & pagination
+* Meal details with reviews and favorites
+* Order confirmation with quantity-based pricing
+* Real-time order status updates
+
+### 💳 Payments
+
+* Stripe payment integration
+* Secure checkout session
+* Payment success page with transaction & tracking ID
+* Payment history stored in MongoDB
+
+### 📊 Dashboards
+
+* **User Dashboard:** Profile, orders, reviews, favorites
+* **Chef Dashboard:** Create meals, manage meals & order requests
+* **Admin Dashboard:** Manage users, requests, and platform statistics
+
+### 📈 Platform Statistics (Admin)
+
+* Total payment amount
+* Total registered users
+* Pending orders count
+* Delivered orders count
+* Visualized using Recharts (Bar / Pie charts)
+
+### 🌟 UI & UX
+
+* Responsive design (mobile-friendly)
+* Framer Motion animations
+* Dark / Light theme toggle
+* Loading & error fallback pages
+
+---
+
+## Technologies Used
+
+### Frontend
+
+* React
+* React Router
+* React Hook Form
+* TanStack React Query
+* Axios (with interceptors)
+* Firebase Authentication
+* SweetAlert2
+* Framer Motion
+* Recharts
+* DaisyUI + Tailwind CSS
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* JWT Authentication
+* Stripe Payment API
+* CORS
+
+---
+
+## Optional Features Implemented
+
+* Axios interceptors
+* Search functionality
+* Animations
+* Dark / Light mode
+
+---
+
+🎉 **Thank you for reviewing Locchef!**

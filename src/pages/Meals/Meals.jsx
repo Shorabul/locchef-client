@@ -6,11 +6,9 @@ import { House } from "lucide-react";
 import MealCardSkeleton from "../../components/MealCardSkeleton";
 import EmptyState from "../../components/EmptyState";
 import { motion as Motion } from "framer-motion";
+import { usePageTitle } from "../../hooks/usePageTitle";
 const Meals = () => {
-    useEffect(() => {
-        document.title = "Meals";
-    }, []);
-
+    usePageTitle("Meals");
     const axiosPublic = useAxiosPublic();
 
     const [meals, setMeals] = useState([]);
@@ -126,7 +124,9 @@ const Meals = () => {
                                 key={meal._id}
                                 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                             >
-                                <MealCard meal={meal} />
+                                <div className="w-full flex justify-center">
+                                    <MealCard meal={meal} className="w-full mx-auto" />
+                                </div>
                             </Motion.div>
                         ))}
                 </Motion.div>
@@ -148,7 +148,7 @@ const Meals = () => {
                                 onClick={() => setPage(num + 1)}
                                 className={`px-4 py-2 rounded-lg cursor-pointer ${page === num + 1
                                     ? "bg-[#ffde59] text-black font-bold"
-                                    : "bg-gray-200"
+                                    : "bg-gray-200 text-neutral-600"
                                     }`}
                             >
                                 {num + 1}
@@ -170,3 +170,34 @@ const Meals = () => {
 };
 
 export default Meals;
+
+//  app.get("/meals", async (req, res) => {
+//             try {
+//                 const page = parseInt(req.query.page) || 1;
+//                 const limit = parseInt(req.query.limit) || 10;
+//                 const skip = (page - 1) * limit;
+//                 const sortBy = req.query.sortBy || "_id";
+//                 const order = req.query.order === "desc" ? -1 : 1;
+
+//                 let fields = {};
+//                 if (req.query.fields) req.query.fields.split(",").forEach(f => fields[f] = 1);
+
+//                 const filter = {};
+//                 if (req.query.featured === "true") filter.featured = true;
+
+//                 const meals = await mealsCollection
+//                     .find(filter)
+//                     .project(fields)
+//                     .sort({ [sortBy]: order })
+//                     .skip(skip)
+//                     .limit(limit)
+//                     .toArray();
+
+//                 const total = await mealsCollection.countDocuments(filter);
+
+//                 res.send({ total, page, limit, pages: Math.ceil(total / limit), data: meals });
+//             } catch (error) {
+//                 console.error(error);
+//                 res.status(500).send({ success: false, message: "Failed to fetch meals" });
+//             }
+//         });
