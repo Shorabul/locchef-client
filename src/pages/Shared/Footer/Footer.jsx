@@ -19,10 +19,10 @@ const Footer = () => {
             variants={footerVariants}
             initial="hidden"
             animate="visible"
-            className="bg-gray-900 text-white mt-10"
+            className="bg-gray-900 text-white"
         >
             <Container>
-                <div className=" w-full h-full px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className=" w-full h-full py-12 grid grid-cols-1 md:grid-cols-4 gap-6">
 
                     {/* Brand Logo */}
                     <Motion.div variants={itemVariants} className="flex flex-col items-start md:col-span-1">

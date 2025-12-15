@@ -80,89 +80,91 @@ const Meals = () => {
 
     return (
         <Container>
-            {/* Header */}
-            <div className="flex flex-col items-center justify-center mb-6">
-                <h1 className="text-center font-bold text-2xl">Meals</h1>
-                <p className="flex gap-2">
-                    <span className="opacity-80 flex items-center gap-2">
-                        <House size={16} />Home
-                    </span>
-                    <span> / meals</span>
-                </p>
-            </div>
+            <section className="mb-10">
+                {/* Header */}
+                <div className="flex flex-col items-center justify-center mb-6">
+                    <h1 className="text-center font-bold text-2xl">Meals</h1>
+                    <p className="flex gap-2">
+                        <span className="opacity-80 flex items-center gap-2">
+                            <House size={16} />Home
+                        </span>
+                        <span> / meals</span>
+                    </p>
+                </div>
 
-            {/* Sort Button */}
-            <div className="w-full flex justify-end mb-6">
-                <button
-                    onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                    className="bg-[#ffde59] px-3 py-2 rounded-lg font-semibold hover:bg-yellow-400 text-black"
-                >
-                    Sort by Price ({sortOrder === "asc" ? "Low → High" : "High → Low"})
-                </button>
-            </div>
-
-            {/* Meals Grid */}
-            <Motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={{
-                    hidden: { opacity: 0 },
-                    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-                }}
-                className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-            >
-
-                {!loading && meals.length === 0 && (
-                    <div className="col-span-full">
-                        <EmptyState message="No meals found." />
-                    </div>
-                )}
-
-                {!loading &&
-                    meals.map((meal) => (
-                        <Motion.div
-                            key={meal._id}
-                            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                        >
-                            <MealCard meal={meal} />
-                        </Motion.div>
-                    ))}
-            </Motion.div>
-
-            {/* Pagination */}
-            {!loading && meals.length > 0 && (
-                <div className="flex justify-center items-center gap-3 mt-8">
+                {/* Sort Button */}
+                <div className="w-full flex justify-end mb-6">
                     <button
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                        className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
+                        onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                        className="bg-[#ffde59] px-3 py-2 rounded-lg font-semibold hover:bg-yellow-400 text-black"
                     >
-                        Prev
-                    </button>
-
-                    {[...Array(pages).keys()].map((num) => (
-                        <button
-                            key={num}
-                            onClick={() => setPage(num + 1)}
-                            className={`px-4 py-2 rounded-lg cursor-pointer ${page === num + 1
-                                ? "bg-[#ffde59] text-black font-bold"
-                                : "bg-gray-200"
-                                }`}
-                        >
-                            {num + 1}
-                        </button>
-                    ))}
-
-                    <button
-                        disabled={page === pages}
-                        onClick={() => setPage(page + 1)}
-                        className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
-                    >
-                        Next
+                        Sort by Price ({sortOrder === "asc" ? "Low → High" : "High → Low"})
                     </button>
                 </div>
-            )}
+
+                {/* Meals Grid */}
+                <Motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={{
+                        hidden: { opacity: 0 },
+                        visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+                    }}
+                    className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                >
+
+                    {!loading && meals.length === 0 && (
+                        <div className="col-span-full">
+                            <EmptyState message="No meals found." />
+                        </div>
+                    )}
+
+                    {!loading &&
+                        meals.map((meal) => (
+                            <Motion.div
+                                key={meal._id}
+                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                            >
+                                <MealCard meal={meal} />
+                            </Motion.div>
+                        ))}
+                </Motion.div>
+
+                {/* Pagination */}
+                {!loading && meals.length > 0 && (
+                    <div className="flex justify-center items-center gap-3 mt-8">
+                        <button
+                            disabled={page === 1}
+                            onClick={() => setPage(page - 1)}
+                            className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
+                        >
+                            Prev
+                        </button>
+
+                        {[...Array(pages).keys()].map((num) => (
+                            <button
+                                key={num}
+                                onClick={() => setPage(num + 1)}
+                                className={`px-4 py-2 rounded-lg cursor-pointer ${page === num + 1
+                                    ? "bg-[#ffde59] text-black font-bold"
+                                    : "bg-gray-200"
+                                    }`}
+                            >
+                                {num + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            disabled={page === pages}
+                            onClick={() => setPage(page + 1)}
+                            className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
+            </section>
         </Container>
     );
 };

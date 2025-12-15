@@ -14,7 +14,7 @@ const ReviewCard = ({ review }) => {
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.2 }}
-            className="bg-white dark:bg-neutral-700 shadow-lg rounded-xl overflow-hidden w-[300px] p-6 flex flex-col gap-4"
+            className="bg-white dark:bg-neutral-700 shadow-lg rounded-xl w-[300px] p-10 flex flex-col gap-4"
         >
             {/* Comma Icons */}
             <div className="flex mb-2">
@@ -120,16 +120,29 @@ const CustomerReviews = () => {
 
     return (
         <Container>
-            <div className="text-3xl font-bold text-center mb-12 flex items-center justify-center w-full gap-2">
-                <UtensilsCrossed className="text-[#ffde59]" />
-                <span>What Our Clients Say</span>
-            </div>
+            <section className="text-center py-16">
+                <Motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-10"
+                >
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold flex justify-center items-center gap-2">
+                        <UtensilsCrossed className="text-[#ffde59] text-5 sm:text-6 md:size-7 lg:text-9 xl:size-10 " />
+                        What Our Clients Say
+                    </h1>
+                    <p className="mt-2 text-neutral-500 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
+                        Testimonials
+                    </p>
+                </Motion.div>
 
-            {/* Top row: left → right */}
-            <AutoScrollRow reviews={reviews} direction="left" />
+                {/* Top row: left → right */}
+                <AutoScrollRow reviews={reviews} direction="left" />
 
-            {/* Bottom row: right → left */}
-            <AutoScrollRow reviews={reviews} direction="right" />
+                {/* Bottom row: right → left */}
+                <AutoScrollRow reviews={reviews} direction="right" />
+            </section>
         </Container>
     );
 };

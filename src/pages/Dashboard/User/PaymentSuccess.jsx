@@ -71,7 +71,7 @@ const PaymentSuccess = () => {
             </p>
 
             <a href="/dashboard/orders">
-                <button className="btn bg-primary text-black px-6 py-2 rounded-lg hover:bg-primary/80">
+                <button className="py-2 px-3 bg-[#ffde59] text-black rounded-lg hover:bg-yellow-400 font-semibold">
                     Go to Orders
                 </button>
             </a>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion as Motion } from "framer-motion";
-import { UtensilsCrossed } from "lucide-react";
+import { UtensilsCrossed, ArrowRight } from "lucide-react";
 import MealCardSkeleton from "../../../components/MealCardSkeleton";
 import EmptyState from "../../../components/EmptyState";
 import MealCard from "../../../components/Shared/MealCard";
 import Container from "../../../components/Shared/Container";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import { Link, } from 'react-router';
 
 const PopularMeals = () => {
     const axiosPublic = useAxiosPublic();
@@ -32,7 +33,7 @@ const PopularMeals = () => {
     if (loading) {
         return (
             <Container>
-                <section className="py-14 px-4">
+                <section className="py-16">
                     {/* Section Header */}
                     <div className="text-center mb-10">
                         <h1 className="text-3xl font-bold flex justify-center items-center gap-2">
@@ -56,7 +57,7 @@ const PopularMeals = () => {
     }
     return (
         <Container>
-            <section className="py-14 px-4">
+            <section className="py-16">
                 {/* Section Header */}
                 <Motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -65,11 +66,11 @@ const PopularMeals = () => {
                     viewport={{ once: true }}
                     className="text-center mb-10"
                 >
-                    <h1 className="text-3xl font-bold flex justify-center items-center gap-2">
-                        <UtensilsCrossed className="text-[#ffde59]" />
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold flex justify-center items-center gap-2">
+                        <UtensilsCrossed className="text-[#ffde59] text-5 sm:text-6 md:size-7 lg:text-9 xl:size-10 " />
                         Today’s Popular Meals
                     </h1>
-                    <p className="mt-2 text-neutral-500">
+                    <p className="mt-2 text-neutral-500 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
                         Freshly cooked by our top local chefs
                     </p>
                 </Motion.div>
@@ -83,7 +84,7 @@ const PopularMeals = () => {
                         hidden: { opacity: 0 },
                         visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
                     }}
-                    className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                    className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-4"
                 >
 
                     {!loading && meals.length === 0 && (
@@ -102,6 +103,16 @@ const PopularMeals = () => {
                             </Motion.div>
                         ))}
                 </Motion.div>
+                <div className="w-full flex justify-center">
+
+                    <Link
+                        to='/meals'
+                        className="py-2 px-3 rounded-lg text-black font-semibold bg-[#ffde59] flex items-center gap-2">
+                        <span>see more</span>
+                        <ArrowRight />
+                    </Link>
+                </div>
+
             </section>
         </Container>
     );
