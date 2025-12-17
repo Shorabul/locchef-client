@@ -42,6 +42,34 @@ const AuthProvider = ({ children }) => {
 
 
     // Observe Firebase login state
+    // useEffect(() => {
+    //     const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    //         setUser(currentUser);
+    //         setLoading(false);
+
+    //         if (!currentUser?.email) {
+    //             setBackendData(null);
+    //             setBackendLoading(false);
+    //             return;
+    //         }
+
+    //         try {
+    //             setBackendLoading(true);
+
+    //             const res = await axiosSecure.get(`/users/${currentUser.email}`);
+    //             const { role, status, chefId } = res.data;
+    //             setBackendData({ role, status, chefId });
+    //         } catch (error) {
+    //             console.error(error);
+    //             setBackendData({ role: 'user', status: 'active', chefId: null });
+    //         } finally {
+    //             setBackendLoading(false);
+    //         }
+    //     });
+
+    //     return () => unSubscribe();
+    // }, [axiosSecure]);
+
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
@@ -56,11 +84,19 @@ const AuthProvider = ({ children }) => {
             try {
                 setBackendLoading(true);
 
-                const res = await axiosSecure.get(`/users/${currentUser.email}`);
+                // Get ID token from Firebase
+                const idToken = await currentUser.getIdToken(/* forceRefresh */ true);
+
+                // Include it in axiosSecure headers
+                const res = await axiosSecure.get(`/users/${currentUser.email}`, {
+                    headers: { Authorization: `Bearer ${idToken}` },
+                });
+
                 const { role, status, chefId } = res.data;
                 setBackendData({ role, status, chefId });
             } catch (error) {
                 console.error(error);
+                // Fallback role if API fails
                 setBackendData({ role: 'user', status: 'active', chefId: null });
             } finally {
                 setBackendLoading(false);
@@ -68,7 +104,8 @@ const AuthProvider = ({ children }) => {
         });
 
         return () => unSubscribe();
-    }, [axiosSecure, user]);
+    }, [axiosSecure]);
+
 
 
     const authInfo = {

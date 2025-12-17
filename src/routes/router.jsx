@@ -14,7 +14,6 @@ import ManageRequests from "../pages/Dashboard/Admin/ManageRequests";
 import PlatformStatistics from "../pages/Dashboard/Admin/PlatformStatistics";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Dashboard/Profile";
-import PrivateRoute from "./PrivateRoute";
 import UpdateMeal from "../pages/Dashboard/Chef/UpdateMeal";
 import Meals from "../pages/Meals/Meals";
 import MealDetails from "../pages/MealDetails/MealDetails";
@@ -25,33 +24,62 @@ import AdminRoute from "./AdminRoute";
 import ChefRoute from "./ChefRoute";
 import AuthGate from "../components/AuthGate";
 import NotFound from "../pages/NotFound/NotFound";
+import UserRoute from "./UserRoute";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
     {
         path: '/',
         // errorElement: <NotFound />,
-        element: (<AuthGate><RootLayout /></AuthGate>
+        element: (<AuthGate>
+            <RootLayout />
+        </AuthGate>
         ),
         children: [
             { index: true, element: <Home /> },
             { path: '/meals', element: <Meals /> },
-            { path: '/meals/:id', element: (<PrivateRoute><MealDetails /></PrivateRoute>) },
-            { path: '/order-confirm/:id', element: (<PrivateRoute><OrderConfirm /> </PrivateRoute>) },
+            {
+                path: '/meals/:id', element: (<PrivateRoute>
+                    <MealDetails />
+                </PrivateRoute>)
+            },
+            {
+                path: '/order-confirm/:id', element: (<PrivateRoute>
+                    <OrderConfirm />
+                </PrivateRoute>)
+            },
         ]
     },
     { path: '/login', element: <Login />, },
     { path: '/register', element: <Register />, },
     {
         path: '/dashboard',
-        element: (<PrivateRoute><DashboardLayout /></PrivateRoute>),
+        element: (
+            <AuthGate>
+                <PrivateRoute>
+                    <DashboardLayout />
+                </PrivateRoute>
+            </AuthGate>
+        ),
         children: [
-            { index: true, Component: Profile },
-            { path: 'profile', element: <Profile /> },
+            { index: true, element: <Profile /> },
+            { path: 'profile', Component: Profile },
 
             //user Routes
-            { path: 'orders', element: <MyOrders /> },
-            { path: 'review', element: <MyReview /> },
-            { path: 'favorites', element: <FavoriteMeals /> },
+            {
+                path: 'orders', element: (<UserRoute>
+                    <MyOrders />
+                </UserRoute>)
+            },
+            {
+                path: 'review', element: (<UserRoute>
+                    <MyReview /></UserRoute>)
+            },
+            {
+                path: 'favorites', element: (<UserRoute>
+                    <FavoriteMeals />
+                </UserRoute>)
+            },
             { path: 'payment-success', element: <PaymentSuccess /> },
             { path: 'payment-cancelled', element: <PaymentCancelled /> },
 

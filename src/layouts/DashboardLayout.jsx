@@ -20,7 +20,7 @@ import Logo from "../components/Logo/Logo";
 
 export default function DashboardLayout() {
     const isDark = document.documentElement.classList.contains("dark");
-    const { user, backendData, logOut } = useAuth();
+    const { user, backendData, loading, backendLoading, logOut } = useAuth();
     const [open, setOpen] = useState(false);
     const [profileToggle, setProfileToggle] = useState(false);
 
@@ -65,8 +65,15 @@ export default function DashboardLayout() {
         ],
     };
 
-    const activeMenu = menuItems[backendData?.role] || [];
+    if (loading || backendLoading || !backendData?.role) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
 
+    const activeMenu = menuItems[backendData?.role];
     return (
         <div className="flex min-h-screen w-full">
             {/* Top Navbar */}

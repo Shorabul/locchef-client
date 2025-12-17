@@ -18,6 +18,8 @@ import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const COLORS = ["#ffde59", "#22c55e", "#3b82f6", "#ef4444"];
 
+const SkeletonBox = ({ className }) => (<div className={`animate-pulse bg-gray-300 dark:bg-gray-700 rounded ${className}`}></div>);
+
 const PlatformStatistics = () => {
     usePageTitle('Platform Statistics');
     const axiosSecure = useAxiosSecure();
@@ -31,7 +33,47 @@ const PlatformStatistics = () => {
     });
 
     if (isLoading) {
-        return <div className="text-center py-10">Loading statistics...</div>;
+        return <div className="p-6 space-y-8">
+            {/* Stats Cards Skeleton */}
+            <div className="stats shadow w-full bg-neutral-50 dark:bg-neutral-600">
+                <div className="stat place-items-center">
+                    <SkeletonBox className="h-4 w-24 mb-2" /> {/* Title */}
+                    <SkeletonBox className="h-8 w-32 mb-2" /> {/* Value */}
+                    <SkeletonBox className="h-3 w-20" /> {/* Desc */}
+                </div>
+
+                <div className="stat place-items-center">
+                    <SkeletonBox className="h-4 w-24 mb-2" />
+                    <SkeletonBox className="h-8 w-32 mb-2" />
+                    <SkeletonBox className="h-3 w-20" />
+                </div>
+
+                <div className="stat place-items-center">
+                    <SkeletonBox className="h-4 w-24 mb-2" />
+                    <SkeletonBox className="h-8 w-32 mb-2" />
+                    <SkeletonBox className="h-3 w-20" />
+                </div>
+
+                <div className="stat place-items-center">
+                    <SkeletonBox className="h-4 w-24 mb-2" />
+                    <SkeletonBox className="h-8 w-32 mb-2" />
+                    <SkeletonBox className="h-3 w-20" />
+                </div>
+            </div>
+
+            {/* Charts Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-neutral-50 dark:bg-neutral-600 p-4 rounded-xl shadow flex flex-col items-center justify-center">
+                    <SkeletonBox className="h-6 w-40 mb-4" /> {/* Chart title */}
+                    <SkeletonBox className="h-64 w-full" /> {/* Bar chart placeholder */}
+                </div>
+
+                <div className="bg-neutral-50 dark:bg-neutral-600 p-4 rounded-xl shadow flex flex-col items-center justify-center">
+                    <SkeletonBox className="h-6 w-40 mb-4" /> {/* Chart title */}
+                    <SkeletonBox className="h-64 w-full rounded-full" /> {/* Pie chart placeholder */}
+                </div>
+            </div>
+        </div>;
     }
 
     const {

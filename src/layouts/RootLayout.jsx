@@ -8,7 +8,7 @@ import {
 } from 'react-router';
 import Navbar from '../pages/Shared/Navbar/Navbar';
 import Footer from '../pages/Shared/Footer/Footer';
-import PageLoader from '../pages/PageLoader/PageLoader';
+// import PageLoader from '../pages/PageLoader/PageLoader';
 
 const RootLayout = () => {
     // const navigation = useNavigation();
