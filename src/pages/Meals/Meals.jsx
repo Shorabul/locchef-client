@@ -3,82 +3,92 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Container from "../../components/Shared/Container";
 import MealCard from "../../components/Shared/MealCard";
 import { House } from "lucide-react";
+import { FaFilter } from "react-icons/fa";
 import MealCardSkeleton from "../../components/MealCardSkeleton";
 import EmptyState from "../../components/EmptyState";
 import { motion as Motion } from "framer-motion";
 import { usePageTitle } from "../../hooks/usePageTitle";
+
 const Meals = () => {
     usePageTitle("Meals");
     const axiosPublic = useAxiosPublic();
 
+    // Data State
     const [meals, setMeals] = useState([]);
-    const [page, setPage] = useState(1);
-    const [pages, setPages] = useState(1);
-    const [sortOrder, setSortOrder] = useState("asc");
+    const [allCategories, setAllCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Filtering & Sorting State
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [priceRange, setPriceRange] = useState([0, 1000]);
+    const [sortOrder, setSortOrder] = useState("asc");
+
+    // Pagination State
+    const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(1);
     const limit = 8;
+
+    // Fetch initial categories (optional: can also be derived from meals if backend allows)
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axiosPublic.get('/meals'); // Fetching a sample to extract categories
+                const categories = res.data.data.map(m => m.category).filter(Boolean);
+                setAllCategories([...new Set(categories)]);
+            } catch (err) { console.error(err); }
+        };
+        fetchCategories();
+    }, [axiosPublic]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axiosPublic.get(
-                    `/meals?page=${page}&limit=${limit}&sortBy=price&order=${sortOrder}&fields=foodName,foodImage,price,rating,deliveryArea,ingredients,deliveryTime,deliveryRadius`
-                );
+
+                // Construct query parameters
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: limit,
+                    sortBy: 'price',
+                    order: sortOrder, // "asc" or "desc"
+                    search: searchTerm,
+                    category: selectedCategory === 'all' ? '' : selectedCategory,
+                    minPrice: priceRange[0],
+                    maxPrice: priceRange[1],
+                    fields: 'foodName,foodImage,price,rating,deliveryArea,ingredients,deliveryTime,deliveryRadius,category'
+                });
+
+                const res = await axiosPublic.get(`/meals?${params.toString()}`);
+
                 setMeals(res.data.data);
                 setPages(res.data.pages);
             } catch (error) {
-                console.log(error);
+                console.error("Error fetching meals:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
-    }, [page, sortOrder, axiosPublic]);
+        // Debounce search to avoid too many API calls
+        const delayDebounceFn = setTimeout(() => {
+            fetchData();
+        }, 400);
 
-    if (loading) {
-        return (
-            <Container>
-                {/* Header Skeleton */}
-                <div className="flex flex-col items-center justify-center mb-6">
-                    <h1 className="text-center font-bold text-2xl">Meals</h1>
-                    <p className="flex gap-2">
-                        <span className="opacity-80 flex items-center gap-2">
-                            <House size={16} />Home
-                        </span>
-                        <span> / meals</span>
-                    </p>
-                </div>
+        return () => clearTimeout(delayDebounceFn);
+    }, [page, sortOrder, searchTerm, selectedCategory, priceRange, axiosPublic]);
 
-                {/* Sort Button Skeleton */}
-                <div className="w-full flex justify-end mb-6">
-                    <div className="h-8 w-32 animate-pulse bg-gray-300 rounded"></div>
-                </div>
-
-                {/* Meals Grid Skeleton */}
-                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {[...Array(limit)].map((_, i) => (
-                        <MealCardSkeleton key={i} />
-                    ))}
-                </div>
-
-                {/* Pagination Skeleton */}
-                <div className="flex justify-center items-center gap-3 mt-8">
-                    {[...Array(3)].map((_, i) => (
-                        <div key={i} className="h-8 w-8 animate-pulse bg-gray-300 rounded"></div>
-                    ))}
-                </div>
-
-            </Container>
-        );
-    }
-
+    const resetFilters = () => {
+        setSearchTerm('');
+        setSelectedCategory('all');
+        setPriceRange([0, 1000]);
+        setSortOrder('asc');
+        setPage(1);
+    };
 
     return (
         <Container>
-            <section className="mb-10">
+            <section className="py-4 lg:py-8">
                 {/* Header */}
                 <div className="flex flex-col items-center justify-center mb-6">
                     <h1 className="text-center font-bold text-2xl">Meals</h1>
@@ -90,114 +100,171 @@ const Meals = () => {
                     </p>
                 </div>
 
-                {/* Sort Button */}
-                <div className="w-full flex justify-end mb-6">
-                    <button
-                        onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                        className="bg-[#ffde59] px-3 py-2 rounded-lg font-semibold hover:bg-yellow-400 text-black"
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Sidebar Filters - UI taken from Services */}
+                    <Motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="lg:col-span-1"
                     >
-                        Sort by Price ({sortOrder === "asc" ? "Low → High" : "High → Low"})
-                    </button>
-                </div>
+                        <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl sticky top-24 border border-neutral-200 dark:border-neutral-700">
+                            <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
+                                <FaFilter className="text-[#ffde59]" /> Filters
+                            </h2>
 
-                {/* Meals Grid */}
-                <Motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={{
-                        hidden: { opacity: 0 },
-                        visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-                    }}
-                    className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                >
+                            {/* Search */}
+                            <div className="mb-6">
+                                <label className="font-semibold text-sm mb-2 block">Search Meal</label>
+                                <input
+                                    type="text"
+                                    placeholder="Food name..."
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 focus:ring-2 focus:ring-[#ffde59] outline-none"
+                                />
+                            </div>
 
-                    {!loading && meals.length === 0 && (
-                        <div className="col-span-full">
-                            <EmptyState message="No meals found." />
-                        </div>
-                    )}
+                            {/* Category */}
+                            <div className="mb-6">
+                                <label className="font-semibold text-sm mb-2 block">Category</label>
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => {
+                                        setSelectedCategory(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 outline-none"
+                                >
+                                    <option value="all">All Categories</option>
+                                    {allCategories.map(cat => (
+                                        <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                    {!loading &&
-                        meals.map((meal) => (
-                            <Motion.div
-                                key={meal._id}
-                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                            >
-                                <div className="w-full flex justify-center">
-                                    <MealCard meal={meal} className="w-full mx-auto" />
+                            {/* Price Range */}
+                            <div className="mb-6">
+                                <label className="font-semibold text-sm mb-2 block">Price Range ($)</label>
+                                <div className="flex gap-2 mb-3">
+                                    <input
+                                        type="number"
+                                        value={priceRange[0]}
+                                        onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
+                                        className="w-1/2 px-2 py-1 text-sm rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900"
+                                    />
+                                    <input
+                                        type="number"
+                                        value={priceRange[1]}
+                                        onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                                        className="w-1/2 px-2 py-1 text-sm rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900"
+                                    />
                                 </div>
-                            </Motion.div>
-                        ))}
-                </Motion.div>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1000"
+                                    value={priceRange[1]}
+                                    onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                                    className="w-full accent-[#ffde59]"
+                                />
+                            </div>
 
-                {/* Pagination */}
-                {!loading && meals.length > 0 && (
-                    <div className="flex justify-center items-center gap-3 mt-8">
-                        <button
-                            disabled={page === 1}
-                            onClick={() => setPage(page - 1)}
-                            className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
-                        >
-                            Prev
-                        </button>
+                            {/* Sort */}
+                            <div className="mb-6">
+                                <label className="font-semibold text-sm mb-2 block">Sort By Price</label>
+                                <select
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(e.target.value)}
+                                    className="w-full px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 outline-none"
+                                >
+                                    <option value="asc">Price: Low to High</option>
+                                    <option value="desc">Price: High to Low</option>
+                                </select>
+                            </div>
 
-                        {[...Array(pages).keys()].map((num) => (
                             <button
-                                key={num}
-                                onClick={() => setPage(num + 1)}
-                                className={`px-4 py-2 rounded-lg cursor-pointer ${page === num + 1
-                                    ? "bg-[#ffde59] text-black font-bold"
-                                    : "bg-gray-200 text-neutral-600"
-                                    }`}
+                                onClick={resetFilters}
+                                className="w-full py-2 border border-[#ffde59] rounded-lg font-bold hover:bg-[#ffde59]  transition-colors"
                             >
-                                {num + 1}
+                                Reset All Filters
                             </button>
-                        ))}
+                        </div>
+                    </Motion.div>
 
-                        <button
-                            disabled={page === pages}
-                            onClick={() => setPage(page + 1)}
-                            className="px-4 py-2 bg-neutral-50 dark:bg-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg cursor-pointer"
-                        >
-                            Next
-                        </button>
+                    {/* Meals Content Area */}
+                    <div className="lg:col-span-3">
+                        {loading ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {[...Array(limit)].map((_, i) => (
+                                    <MealCardSkeleton key={i} />
+                                ))}
+                            </div>
+                        ) : meals.length > 0 ? (
+                            <Motion.div
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    hidden: { opacity: 0 },
+                                    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+                                }}
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                            >
+                                {meals.map((meal) => (
+                                    <Motion.div
+                                        key={meal._id}
+                                        variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                                    >
+                                        <MealCard meal={meal} />
+                                    </Motion.div>
+                                ))}
+                            </Motion.div>
+                        ) : (
+                            <div className="h-96 flex items-center justify-center">
+                                <EmptyState message="No meals found matching your filters." />
+                            </div>
+                        )}
+
+                        {/* Pagination */}
+                        {!loading && pages > 1 && (
+                            <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
+                                <button
+                                    disabled={page === 1}
+                                    onClick={() => setPage(page - 1)}
+                                    className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800 disabled:opacity-50 rounded-lg font-medium"
+                                >
+                                    Prev
+                                </button>
+
+                                {[...Array(pages).keys()].map((num) => (
+                                    <button
+                                        key={num}
+                                        onClick={() => setPage(num + 1)}
+                                        className={`w-10 h-10 rounded-lg font-bold transition-colors ${page === num + 1
+                                            ? "bg-[#ffde59] text-black"
+                                            : "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200"
+                                            }`}
+                                    >
+                                        {num + 1}
+                                    </button>
+                                ))}
+
+                                <button
+                                    disabled={page === pages}
+                                    onClick={() => setPage(page + 1)}
+                                    className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800 disabled:opacity-50 rounded-lg font-medium"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
             </section>
         </Container>
     );
 };
 
 export default Meals;
-
-//  app.get("/meals", async (req, res) => {
-//             try {
-//                 const page = parseInt(req.query.page) || 1;
-//                 const limit = parseInt(req.query.limit) || 10;
-//                 const skip = (page - 1) * limit;
-//                 const sortBy = req.query.sortBy || "_id";
-//                 const order = req.query.order === "desc" ? -1 : 1;
-
-//                 let fields = {};
-//                 if (req.query.fields) req.query.fields.split(",").forEach(f => fields[f] = 1);
-
-//                 const filter = {};
-//                 if (req.query.featured === "true") filter.featured = true;
-
-//                 const meals = await mealsCollection
-//                     .find(filter)
-//                     .project(fields)
-//                     .sort({ [sortBy]: order })
-//                     .skip(skip)
-//                     .limit(limit)
-//                     .toArray();
-
-//                 const total = await mealsCollection.countDocuments(filter);
-
-//                 res.send({ total, page, limit, pages: Math.ceil(total / limit), data: meals });
-//             } catch (error) {
-//                 console.error(error);
-//                 res.status(500).send({ success: false, message: "Failed to fetch meals" });
-//             }
-//         });
