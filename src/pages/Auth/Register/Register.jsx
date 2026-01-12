@@ -72,7 +72,7 @@ const Register = () => {
             // Update Firebase profile
             await updateUserProfile({ displayName: data.name, photoURL });
 
-            await axiosSecure.post("/jwt", { email: data.email });
+            // await axiosSecure.post("/jwt", { email: data.email });
 
             Swal.fire({
                 position: 'top',

@@ -1,6 +1,7 @@
+import React from "react";
 import { motion as Motion } from "framer-motion";
 
-const AnimatedInput = ({ icon: Icon, error, touched, children }) => (
+const AnimatedInput = ({ icon, error, touched, children }) => (
     <Motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -8,7 +9,10 @@ const AnimatedInput = ({ icon: Icon, error, touched, children }) => (
         className="relative"
     >
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Icon className={`${error ? "text-red-500" : touched ? "text-teal-500" : "text-gray-400"}`} />
+            {React.createElement(icon, {
+                className: `${error ? "text-red-500" : touched ? "text-teal-500" : "text-gray-400"}`
+            })}
+
         </div>
         {children}
         {/* {error && (
