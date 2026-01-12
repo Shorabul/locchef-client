@@ -9,12 +9,12 @@ const About = () => {
         <Container>
             <div className="py-4 lg:py-8 space-y-20">
                 <div className="flex flex-col items-center justify-center mb-6">
-                    <h1 className="text-center font-bold text-2xl">Meals</h1>
+                    <h1 className="text-center font-bold text-2xl">About</h1>
                     <p className="flex gap-2">
                         <span className="opacity-80 flex items-center gap-2">
                             <House size={16} />Home
                         </span>
-                        <span> / meals</span>
+                        <span> / about</span>
                     </p>
                 </div>
                 {/* Hero Section: The Mission */}
