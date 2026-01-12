@@ -26,6 +26,10 @@ import AuthGate from "../components/AuthGate";
 import NotFound from "../pages/NotFound/NotFound";
 import UserRoute from "./UserRoute";
 import PrivateRoute from "./PrivateRoute";
+import Contact from "../pages/Contact/Contact";
+import About from "../pages/About/About";
+import Blog from "../pages/Blog/Blog";
+import HelpCenter from "../pages/HelpCenter/HelpCenter";
 
 export const router = createBrowserRouter([
     {
@@ -38,11 +42,11 @@ export const router = createBrowserRouter([
         children: [
             { index: true, element: <Home /> },
             { path: '/meals', element: <Meals /> },
-            {
-                path: '/meals/:id', element: (<PrivateRoute>
-                    <MealDetails />
-                </PrivateRoute>)
-            },
+            { path: '/blog', element: <Blog /> },
+            { path: '/about', element: <About /> },
+            { path: '/help-center', element: <HelpCenter /> },
+            { path: "/contact", element: <Contact /> },
+            { path: '/meals/:id', element: <MealDetails /> },
             {
                 path: '/order-confirm/:id', element: (<PrivateRoute>
                     <OrderConfirm />

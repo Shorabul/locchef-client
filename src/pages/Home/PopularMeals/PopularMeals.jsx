@@ -7,6 +7,7 @@ import MealCard from "../../../components/Shared/MealCard";
 import Container from "../../../components/Shared/Container";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import { Link, } from 'react-router';
+import SectionHeader from "../Components/Header/SectionHeader";
 
 const PopularMeals = () => {
     const axiosPublic = useAxiosPublic();
@@ -56,22 +57,14 @@ const PopularMeals = () => {
     }
     return (
         <Container>
-            <section className="py-16">
+            <section className="">
                 {/* Section Header */}
-                <Motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-10"
-                >
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold flex justify-center items-center gap-2">
-                        <UtensilsCrossed className="text-[#ffde59] text-5 sm:text-6 md:size-7 lg:text-9 xl:size-10 " />
-                        Today’s Popular Meals
-                    </h1>
-                    <p className="mt-2 text-neutral-500 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
-                        Freshly cooked by our top local chefs
-                    </p>
-                </Motion.div>
+                <SectionHeader
+                    title="Popular Meals"
+                    subtitle="Freshly cooked by our top local chefs"
+                    icon={UtensilsCrossed}
+                />
+
 
                 {/* Meals Grid */}
                 <Motion.div
@@ -81,7 +74,7 @@ const PopularMeals = () => {
                         hidden: { opacity: 0 },
                         visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
                     }}
-                    className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-4"
+                    className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4"
                 >
 
                     {!loading && meals.length === 0 && (

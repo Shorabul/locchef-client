@@ -1,3 +1,45 @@
 @import "tailwindcss";
 @plugin "daisyui";
 @custom-variant dark (&:where(.dark, .dark *));
+
+
+/* Force Scrollbar Styles Globally */
+:root {
+    --sb-track: #0f172a;
+    --sb-thumb: #ffde59;
+    --sb-thumb-hover: #eab308;
+}
+
+/* Chrome, Edge, and Safari */
+html::-webkit-scrollbar {
+    width: 10px;
+    display: block;
+    /* Ensures it's not hidden */
+}
+
+html::-webkit-scrollbar-track {
+    background: var(--sb-track);
+}
+
+html::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 10px;
+    border: 2px solid var(--sb-track);
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: var(--sb-thumb-hover);
+}
+
+/* Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb) var(--sb-track);
+    scroll-behavior: smooth;
+}
+
+/* Also apply to body to be safe */
+body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb) var(--sb-track);
+}

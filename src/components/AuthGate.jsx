@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import PageLoader from "../pages/PageLoader/PageLoader";
+import useAuthRole from "../hooks/useAuthRole";
 
 
 const AuthGate = ({ children }) => {
-    const { loading, backendLoading } = useAuth();
+    const { loading } = useAuth();
     const [showLoader, setShowLoader] = useState(false);
+    const { backendLoading } = useAuthRole();
+
 
     useEffect(() => {
         let timer;

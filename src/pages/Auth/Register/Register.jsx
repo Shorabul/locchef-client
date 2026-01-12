@@ -13,6 +13,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import Container from '../../../components/Shared/Container';
 import Logo from '../../../components/Logo/Logo';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 
 const Register = () => {
@@ -127,6 +128,13 @@ const Register = () => {
                         <Link to="/login" className="underline">Log in</Link>
                     </div>
                 </Motion.div>
+
+                <SocialLogin></SocialLogin>
+
+                <div className="relative py-2">
+                    <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-neutral-200 dark:border-neutral-800"></span></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span className="bg-white dark:bg-[#121212] px-4 text-neutral-400">Or use email</span></div>
+                </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

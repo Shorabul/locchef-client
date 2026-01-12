@@ -5,20 +5,19 @@ import { Star, MapPin, Clock } from "lucide-react";
 
 const MealCard = ({ meal }) => {
     const navigate = useNavigate();
-
     return (
         <Motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ scale: 1.03 }}
+            // whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.2 }}
-            className="shadow-lg rounded-xl overflow-hidden w-full max-w-sm"
+            className={`shadow-sm rounded-lg overflow-hidden w-full max-w-sm group`}
         >
             {/* Meal Image */}
             <img
                 src={meal?.foodImage}
                 alt={meal?.foodName}
-                className="w-full h-40 md:h-48 object-cover"
+                className="w-full h-40 md:h-48 object-cover transition-all duration-500 ease-in-out group-hover:scale-110"
             />
 
             {/* Content */}
@@ -48,7 +47,7 @@ const MealCard = ({ meal }) => {
 
                     <div className="flex items-center gap-1">
                         <span>{meal?.deliveryArea}</span>
-                        <MapPin size={16} /> <span>{meal?.deliveryRadius || "5 km"}</span>
+                        <MapPin size={16} /> <span>{meal?.deliveryRadius ? `${meal.deliveryRadius} km` : "5 km"}</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <Clock size={16} /> <span>{meal?.deliveryTime || "40 min"}</span>

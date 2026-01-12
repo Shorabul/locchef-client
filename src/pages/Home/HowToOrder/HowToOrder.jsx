@@ -2,6 +2,7 @@ import React from "react";
 import { Laptop, Book, ShoppingCart, Scooter, UtensilsCrossed } from "lucide-react";
 import { motion as Motion } from "framer-motion";
 import Container from "../../../components/Shared/Container";
+import SectionHeader from "../Components/Header/SectionHeader";
 
 const steps = [
     {
@@ -29,22 +30,12 @@ const steps = [
 const HowToOrder = () => {
     return (
         <Container>
-            <section className="py-16">
-                <Motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-10"
-                >
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold flex justify-center items-center gap-2">
-                        <UtensilsCrossed className="text-[#ffde59] text-5 sm:text-6 md:size-7 lg:text-9 xl:size-10 " />
-                        How to order?
-                    </h1>
-                    <p className="mt-2 text-neutral-500 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
-                        Follow the Steps
-                    </p>
-                </Motion.div>
+            <section className="">
+                <SectionHeader
+                    title="How to order?"
+                    subtitle="Follow the Steps"
+                    icon={UtensilsCrossed}
+                />
 
                 <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                     {steps.map((step, index) => (

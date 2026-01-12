@@ -48,6 +48,9 @@ const Navbar = () => {
     const linkItems = [
         { name: 'Home', path: '/' },
         { name: 'Meals', path: '/meals' },
+        { name: 'Blog', path: '/blog' },
+        { name: 'About', path: '/about' },
+        { name: 'Contact', path: '/contact' },
         ...(user ? [{ name: 'Dashboard', path: '/dashboard' }] : []),
     ];
 
@@ -99,20 +102,12 @@ const Navbar = () => {
                             </div>
 
                             {user ? (
-                                <div className='flex items-center gap-3'>
-                                    <ProfileDropdown
-                                        handleProfileToggle={handleProfileToggle}
-                                        user={user}
-                                        profileToggle={profileToggle}
-                                        handleLogOut={handleLogOut}
-                                    />
-                                    <button
-                                        onClick={handleLogOut}
-                                        className="hidden lg:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-[#ffde59] hover:text-black transition-all border border-transparent"
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
+                                <ProfileDropdown
+                                    handleProfileToggle={handleProfileToggle}
+                                    user={user}
+                                    profileToggle={profileToggle}
+                                    handleLogOut={handleLogOut}
+                                />
                             ) : (
                                 <div className="flex items-center gap-2">
                                     <NavLink

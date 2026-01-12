@@ -17,10 +17,14 @@ import {
     Star,
 } from "lucide-react";
 import Logo from "../components/Logo/Logo";
+import useAuthRole from "../hooks/useAuthRole";
+import { TbLogout } from "react-icons/tb";
+
 
 export default function DashboardLayout() {
     const isDark = document.documentElement.classList.contains("dark");
-    const { user, backendData, loading, backendLoading, logOut } = useAuth();
+    const { user, loading, logOut } = useAuth();
+    const { backendData, backendLoading } = useAuthRole();
     const [open, setOpen] = useState(false);
     const [profileToggle, setProfileToggle] = useState(false);
 
@@ -65,7 +69,7 @@ export default function DashboardLayout() {
         ],
     };
 
-    if (loading || backendLoading || !backendData?.role) {
+    if (loading || backendLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center">
                 <span className="loading loading-spinner loading-lg"></span>
@@ -73,16 +77,27 @@ export default function DashboardLayout() {
         );
     }
 
-    const activeMenu = menuItems[backendData?.role];
+    if (!backendData?.role) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
+
+
+
+    const activeMenu = menuItems[backendData.role] || [];
+
     return (
         <div className="flex min-h-screen w-full">
             {/* Top Navbar */}
-            <nav className={`fixed backdrop-blur-xl top-0 left-0 w-full z-50 bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-100 dark:border-neutral-600 transition-all duration-300`}>
+            <nav className={`fixed backdrop-blur-xl top-0 left-0 w-full z-50 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-100 dark:border-neutral-700 transition-all duration-300`}>
                 <Container>
                     <div className="w-full flex justify-between items-center py-3">
                         <div className="flex items-center gap-4">
                             {/* Menu Toggle Button */}
-                            <div className="block text-3xl cursor-pointer">
+                            <div className="block text-3xl cursor-pointer border-2 rounded-lg border-[#ffde59] p-1">
                                 <Motion.div
                                     key={open ? "close" : "open"}
                                     initial={{ rotate: open ? -90 : 90, opacity: 0 }}
@@ -114,10 +129,10 @@ export default function DashboardLayout() {
 
             {/* Sidebar Desktop*/}
             <div
-                className={` hidden lg:block
-                    fixed top-0 left-0 min-h-screen z-40
+                className={`hidden lg:flex flex-col justify-between
+                    fixed top-0 left-0 min-h-screen z-40 
                     transition-[width] duration-300 pt-20 overflow-x-hidden
-                    bg-neutral-50 dark:bg-neutral-700 border-neutral-100 dark:border-neutral-600 border-r
+                    bg-neutral-50 dark:bg-neutral-800 border-neutral-100 dark:border-neutral-700 border-r
                     ${open ? "w-64" : "w-0 lg:w-20"}
                 `}
             >
@@ -132,7 +147,7 @@ export default function DashboardLayout() {
                                         `flex items-center py-2 px-3  rounded-lg transition-all 
                                         hover:bg-neutral-300 dark:hover:bg-neutral-500
                                         whitespace-nowrap
-                                        ${isActive ? "font-semibold bg-neutral-200 dark:bg-neutral-600" : ""}`
+                                        ${isActive ? "font-semibold bg-[#ffde59] text-neutral-800" : ""}`
                                     }
                                 >
                                     {/* Icon: Centered when closed (desktop), left-margin when open */}
@@ -140,10 +155,7 @@ export default function DashboardLayout() {
 
                                     {/* Text: Visible only when open */}
                                     <span
-                                        className={`
-                                            transition-opacity duration-300
-                                            ${open ? "block opacity-100" : "hidden opacity-0"}
-                                        `}
+                                        className={`transition-opacity duration-300 ${open ? "block opacity-100" : "hidden opacity-0"}`}
                                     >
                                         {item.label}
                                     </span>
@@ -152,15 +164,34 @@ export default function DashboardLayout() {
                         );
                     })}
                 </ul>
+
+                <div className="p-3">
+                    <button
+                        onClick={handleLogOut}
+                        className={`w-full flex items-center p-3  rounded-lg transition-all bg-[#ffde59] whitespace-nowrap font-bold active:scale-95`}
+                    >
+                        {/* Icon: Centered when closed (desktop), left-margin when open */}
+                        <TbLogout className={`w-6 h-6 min-w-[24px] ${open ? 'mr-3' : 'mx-auto'}`} />
+
+                        {/* Text: Visible only when open */}
+                        <span
+                            className={`transition-opacity duration-300 ${open ? "block opacity-100" : "hidden opacity-0"}`}
+                        >
+                            Logout
+                        </span>
+                    </button>
+
+                </div>
             </div>
+
             {/* Sidebar Mobile and tab  */}
             <div
                 className={`
-                    block
+                    flex flex-col justify-between
                     lg:hidden
                     fixed top-0 left-0 min-h-screen z-40
                     transition-all duration-300 pt-20
-                    ${open ? "w-64 bg-neutral-50 dark:bg-neutral-700 border-neutral-200 dark:border-neutral-600 border-r" : "w-0"}
+                    ${open ? "w-64 bg-neutral-50 dark:bg-neutral-800 border-neutral-100 dark:border-neutral-700 border-r" : "w-0"}
                 `}
             >
                 {/* Sidebar content */}
@@ -174,7 +205,7 @@ export default function DashboardLayout() {
                                     <NavLink
                                         to={item.to}
                                         className={({ isActive }) =>
-                                            `flex items-center gap-3 py-2 px-3 rounded-lg transition-all hover:bg-neutral-300 dark:hover:bg-neutral-500 ${isActive ? "font-semibold bg-neutral-200 dark:bg-neutral-600" : ""
+                                            `flex items-center gap-3 py-2 px-3 rounded-lg transition-all hover:bg-yellow-200 dark:hover:text-neutral-800 ${isActive ? "font-semibold bg-[#ffde59] text-neutral-800" : ""
                                             }`
                                         }
                                     >
@@ -185,7 +216,25 @@ export default function DashboardLayout() {
                             );
                         })}
                     </ul>
+
                 </div >
+                <div className="p-3">
+                    <button
+                        onClick={handleLogOut}
+                        className={`w-full flex items-center p-3  rounded-lg transition-all bg-[#ffde59] whitespace-nowrap font-bold active:scale-95`}
+                    >
+                        {/* Icon: Centered when closed (desktop), left-margin when open */}
+                        <TbLogout className={`w-6 h-6 min-w-[24px] ${open ? 'mr-3' : 'mx-auto'}`} />
+
+                        {/* Text: Visible only when open */}
+                        <span
+                            className={`transition-opacity duration-300 ${open ? "block opacity-100" : "hidden opacity-0"}`}
+                        >
+                            Logout
+                        </span>
+                    </button>
+
+                </div>
             </div >
 
 

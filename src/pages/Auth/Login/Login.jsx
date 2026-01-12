@@ -10,6 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import Logo from '../../../components/Logo/Logo';
 import Container from '../../../components/Shared/Container';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 // Define demo credentials outside the component
 const demoAccounts = {
@@ -83,6 +84,8 @@ const Login = () => {
         }, 600);
     };
 
+
+
     return (
         <Container>
             <nav className='w-full py-3'>
@@ -123,6 +126,8 @@ const Login = () => {
                         ))}
                     </div>
                 </div>
+
+                <SocialLogin></SocialLogin>
 
                 <div className="relative py-2">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-neutral-200 dark:border-neutral-800"></span></div>
@@ -173,7 +178,7 @@ const Login = () => {
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={loading}
-                        className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-[#ffde59] text-black font-bold hover:shadow-lg hover:shadow-yellow-500/20 transition-all ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                        className={`w-full flex justify-center items-center gap-2 py-3 rounded-lg bg-[#ffde59] text-black font-bold transition-all ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                     >
                         {loading ? "Authenticating..." : "Sign In"}
                         {!loading && <LuChevronRight size={18} />}

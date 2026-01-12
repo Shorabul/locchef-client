@@ -11,7 +11,7 @@ const Logo = ({ className }) => {
                 alt="Locchef"
                 className="rounded-full shadow-sm"
             />
-            <span className={`font-bold text-3xl ${className}`}>
+            <span className={`font-bold text-xl md:text-3xl ${className}`}>
                 Locchef
             </span>
         </Link>

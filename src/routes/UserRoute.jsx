@@ -1,11 +1,13 @@
 import React from 'react';
 import useAuth from '../hooks/useAuth';
 import { Navigate } from "react-router";
+import PageLoader from '../pages/PageLoader/PageLoader';
+import useAuthRole from '../hooks/useAuthRole';
 const UserRoute = ({ children }) => {
-    const { backendData, loading, backendLoading } = useAuth();
-
+    const { loading } = useAuth();
+    const { backendData, backendLoading } = useAuthRole();
     if (loading || backendLoading) {
-        return null;
+        return <PageLoader></PageLoader>;
     }
 
     if (backendData?.role !== "user") {

@@ -154,6 +154,10 @@ const Profile = () => {
 
     const chefRequestPending = userData?.roleRequest?.chef === "pending";
     const adminRequestPending = userData?.roleRequest?.admin === "pending";
+    const chefRequestRejected = userData?.roleRequest?.chef === "rejected";
+    const adminRequestRejected = userData?.roleRequest?.admin === "rejected";
+    const chefRequestApproved = userData?.roleRequest?.chef === "approved";
+    const adminRequestApproved = userData?.roleRequest?.admin === "approved";
 
     return (
         <Motion.div
@@ -297,28 +301,53 @@ const Profile = () => {
 
             {/* Role request buttons */}
             <div className="flex justify-center gap-4 mt-6">
+
+                {/* Chef Button */}
                 {userData?.role === "user" && (
                     <Motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`bg-[#ffde59] hover:bg-yellow-400 text-black dark:text-black font-semibold py-2 px-6 text-xs md:text-sm lg:text-base rounded-md shadow ${chefRequestPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                        className={`
+                bg-[#ffde59] hover:bg-yellow-400 text-black dark:text-black 
+                font-semibold py-2 px-6 text-xs md:text-sm lg:text-base 
+                rounded-md shadow
+                ${(chefRequestPending || chefRequestRejected || chefRequestApproved)
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""}
+            `}
                         onClick={() => handleRoleRequest("chef")}
-                        disabled={chefRequestPending}
+                        disabled={chefRequestPending || chefRequestRejected || chefRequestApproved}
                     >
-                        {chefRequestPending ? "Chef Request Pending" : "Be a Chef"}
+                        {chefRequestPending && "Chef Request Pending"}
+                        {chefRequestRejected && "Chef Request Rejected"}
+                        {chefRequestApproved && "Chef Request Approved"}
+                        {!chefRequestPending && !chefRequestRejected && !chefRequestApproved && "Be a Chef"}
                     </Motion.button>
                 )}
+
+                {/* Admin Button */}
                 {userData?.role !== "admin" && (
                     <Motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-6 text-xs md:text-sm lg:text-base rounded-md shadow ${adminRequestPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                        className={`
+                bg-gray-700 hover:bg-gray-800 text-white 
+                font-semibold py-2 px-6 text-xs md:text-sm lg:text-base 
+                rounded-md shadow
+                ${(adminRequestPending || adminRequestRejected || adminRequestApproved)
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""}
+            `}
                         onClick={() => handleRoleRequest("admin")}
-                        disabled={adminRequestPending}
+                        disabled={adminRequestPending || adminRequestRejected || adminRequestApproved}
                     >
-                        {adminRequestPending ? "Admin Request Pending" : "Be an Admin"}
+                        {adminRequestPending && "Admin Request Pending"}
+                        {adminRequestRejected && "Admin Request Rejected"}
+                        {adminRequestApproved && "Admin Request Approved"}
+                        {!adminRequestPending && !adminRequestRejected && !adminRequestApproved && "Be an Admin"}
                     </Motion.button>
                 )}
+
             </div>
         </Motion.div>
     );

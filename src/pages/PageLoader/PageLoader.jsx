@@ -1,7 +1,7 @@
 import { motion as Motion } from "framer-motion";
 
 const PageLoader = () => (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+    <div className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-white dark:bg-neutral-800">
         {/* Logo animation */}
         <Motion.img
             src="https://i.ibb.co/WNVv4py3/Loc-Chef.png"

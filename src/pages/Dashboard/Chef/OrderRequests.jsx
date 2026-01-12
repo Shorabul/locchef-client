@@ -1,17 +1,19 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
-import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { LayoutDashboard } from 'lucide-react';
 import Skeleton from '../../../components/Skeleton';
 import EmptyState from '../../../components/EmptyState';
 import { motion as Motion } from "framer-motion";
 import { usePageTitle } from '../../../hooks/usePageTitle';
+import useAuthRole from '../../../hooks/useAuthRole';
 
 const OrderRequests = () => {
     usePageTitle('Order Requests');
-    const { backendData } = useAuth();
+
+    const { backendData } = useAuthRole();
+
     const axiosSecure = useAxiosSecure();
     const isDark = document.documentElement.classList.contains("dark");
 

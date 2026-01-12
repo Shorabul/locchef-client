@@ -60,8 +60,11 @@ export default function ThemeToggle() {
         <div ref={ref} className="relative inline-block text-left select-none">
             {/* Button */}
             <button
-                className="px-3 py-1.5 flex items-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 backdrop-blur-md shadow-sm hover:shadow transition active:scale-95 cursor-pointer"
-                onClick={() => setOpen((o) => !o)}
+                className={`px-3 py-1.5 flex items-center gap-2 rounded-lg transition active:scale-95 cursor-pointer
+                    ${open ? 'bg-[#ffde59] text-neutral-800 border border-transparent'
+                        : 'border border-neutral-200 dark:border-neutral-700 hover:bg-[#ffde59] hover:text-neutral-800 hover:border-transparent'
+                    }`}
+                onClick={() => setOpen(o => !o)}
             >
                 <Motion.div
                     key={mode}
@@ -69,7 +72,7 @@ export default function ThemeToggle() {
                     animate={{ rotate: 0, opacity: 1 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <CurrentIcon className="text-xl" />
+                    <CurrentIcon className="text-sm" />
                 </Motion.div>
 
                 <span className="text-sm font-medium">{label}</span>
@@ -83,11 +86,11 @@ export default function ThemeToggle() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 mt-2 w-44 rounded-xl bg-neutral-50 dark:bg-neutral-700 backdrop-blur-md shadow-xl overflow-hidden"
+                        className="absolute right-0 mt-2 w-44 rounded-xl bg-neutral-100 dark:bg-neutral-700 backdrop-blur-md overflow-hidden"
                     >
                         {/* Option */}
                         <button
-                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition cursor-pointer"
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-[#ffde59] hover:text-neutral-800 transition cursor-pointer"
                             onClick={() => {
                                 setMode("system");
                                 setOpen(false);
@@ -98,7 +101,7 @@ export default function ThemeToggle() {
                         </button>
 
                         <button
-                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition cursor-pointer"
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-[#ffde59] hover:text-neutral-800 transition cursor-pointer"
                             onClick={() => {
                                 setMode("light");
                                 setOpen(false);
@@ -109,7 +112,7 @@ export default function ThemeToggle() {
                         </button>
 
                         <button
-                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition cursor-pointer"
+                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-[#ffde59] hover:text-neutral-800 transition cursor-pointer"
                             onClick={() => {
                                 setMode("dark");
                                 setOpen(false);
