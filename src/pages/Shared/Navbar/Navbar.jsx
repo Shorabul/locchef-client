@@ -5,7 +5,7 @@ import { Link, NavLink } from 'react-router';
 import Container from '../../../components/Shared/Container';
 import { IoMenuSharp, IoClose } from "react-icons/io5";
 import useAuth from '../../../hooks/useAuth';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import ProfileDropdown from '../../../components/ProfileDropdown';
 import Logo from '../../../components/Logo/Logo';
 
@@ -20,158 +20,156 @@ const Navbar = () => {
 
     const handleLogOut = async () => {
         try {
-
             await logOut();
-
+            setMenuToggle(false);
             Swal.fire({
                 position: 'top',
                 icon: "success",
-                title: `You have successfully logged out`,
+                title: `Successfully logged out`,
                 timer: 1500,
                 showConfirmButton: false,
-                background: isDark ? "#262626" : "#ffffff",
-                color: isDark ? "#ffffff" : "#262626",
+                background: isDark ? "#1f1f1f" : "#ffffff",
+                color: isDark ? "#ffffff" : "#1f1f1f",
             });
-
         } catch (error) {
             console.error("Logout failed:", error);
         }
     };
 
-    // Close menu when screen becomes large
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 768) {
-                setMenuToggle(false);
-            }
+            if (window.innerWidth >= 768) setMenuToggle(false);
         };
-
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const links = (
-        <>
-            <NavLink
-                to="/"
-                className={({ isActive }) =>
-                    `px-4 py-3 hover:text-yellow-500 transition ${isActive ? 'text-[#ffde59] font-semibold' : ''}`
-                }
-            >
-                Home
-            </NavLink>
+    // Navigation Links
+    const linkItems = [
+        { name: 'Home', path: '/' },
+        { name: 'Meals', path: '/meals' },
+        ...(user ? [{ name: 'Dashboard', path: '/dashboard' }] : []),
+    ];
 
-            <NavLink
-                to="/meals"
-                className={({ isActive }) =>
-                    `px-4 py-3 hover:text-yellow-500 transition ${isActive ? 'text-[#ffde59] font-semibold' : ''}`
-                }
-            >
-                Meals
-            </NavLink>
-
-            {user && (
-                <NavLink
-                    to="/dashboard"
-                    className={({ isActive }) =>
-                        `px-4 py-3 hover:text-yellow-500 transition ${isActive ? 'text-[#ffde59] font-semibold' : ''}`
-                    }
-                >
-                    Dashboard
-                </NavLink>
+    const links = linkItems.map((link) => (
+        <NavLink
+            key={link.name}
+            to={link.path}
+            onClick={() => setMenuToggle(false)}
+            className={({ isActive }) =>
+                `relative px-1 py-2 text-sm font-medium transition-all duration-300 hover:text-[#ffde59] 
+                ${isActive ? 'text-[#ffde59]' : ''}`
+            }
+        >
+            {({ isActive }) => (
+                <>
+                    <span>{link.name}</span>
+                    {isActive && (
+                        <Motion.span
+                            layoutId="nav-underline"
+                            className="absolute bottom-0 left-0 w-full h-[2px] bg-[#ffde59]"
+                        />
+                    )}
+                </>
             )}
-        </>
-    );
-
+        </NavLink>
+    ));
 
     return (
-        <div className="fixed w-full z-20 backdrop-blur-xl shadow-sm text-neutral-700 dark:text-neutral-50">
-
+        <header className="fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl">
             <Container>
-                <nav className="w-full flex items-center justify-between relative py-3">
+                <div className="w-full relative">
+                    <nav className="flex w-full items-center justify-between h-16 md:h-20 ">
 
-                    {/* Logo */}
-                    <Logo className='hidden md:block' />
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-7 font-medium">
-                        {links}
-                    </div>
-
-                    {/* Right Section */}
-                    <div className="flex items-center gap-4">
-
-                        {/* Profile */}
-                        {user ? (
-                            <div className='flex items-center gap-4'>
-                                <ProfileDropdown
-                                    handleProfileToggle={handleProfileToggle}
-                                    user={user}
-                                    profileToggle={profileToggle}
-                                    handleLogOut={handleLogOut}
-                                ></ProfileDropdown>
-                                <button
-                                    onClick={handleLogOut}
-                                    className="hidden lg:block py-2 px-3 bg-[#ffde59] text-black rounded-md font-semibold hover:bg-yellow-500 transition"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                <NavLink
-                                    to="/login"
-                                    className="bg-[#ffde59] hover:bg-yellow-400 text-black py-2 px-4 rounded-lg font-semibold transition"
-                                >
-                                    Login
-                                </NavLink>
-                                <NavLink
-                                    to="/register"
-                                    className="bg-[#ffde59] hover:bg-yellow-500 text-black py-2 px-4 rounded-lg font-semibold transition"
-                                >
-                                    Register
-                                </NavLink>
-                            </>
-                        )}
-
-                        {/* Theme Toggle */}
-                        <ThemeToggle />
-
-                        {/* Mobile Menu Icon */}
-                        <div className="block md:hidden text-3xl text-neutral-700 dark:text-neutral-50 cursor-pointer">
-                            <Motion.div
-                                key={menutoggle ? "close" : "open"}
-                                initial={{ rotate: menutoggle ? -90 : 90, opacity: 0 }}
-                                animate={{ rotate: 0, opacity: 1 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {menutoggle ? (
-                                    <IoClose onClick={handleMenuToggle} />
-                                ) : (
-                                    <IoMenuSharp onClick={handleMenuToggle} />
-                                )}
-                            </Motion.div>
+                        {/* Left: Logo */}
+                        <div className="flex-shrink-0">
+                            <Logo />
                         </div>
-                    </div>
 
-                    {/* Mobile Menu */}
+                        {/* Center: Desktop Links */}
+                        <div className="hidden lg:flex items-center gap-8">
+                            {links}
+                        </div>
+
+                        {/* Right: Actions */}
+                        <div className="flex items-center gap-3">
+
+                            <div className="hidden lg:block">
+                                <ThemeToggle />
+                            </div>
+
+                            {user ? (
+                                <div className='flex items-center gap-3'>
+                                    <ProfileDropdown
+                                        handleProfileToggle={handleProfileToggle}
+                                        user={user}
+                                        profileToggle={profileToggle}
+                                        handleLogOut={handleLogOut}
+                                    />
+                                    <button
+                                        onClick={handleLogOut}
+                                        className="hidden lg:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-[#ffde59] hover:text-black transition-all border border-transparent"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <NavLink
+                                        to="/login"
+                                        className="px-4 py-2 text-sm font-medium hover:text-neutral-900 dark:hover:text-white transition-colors"
+                                    >
+                                        Login
+                                    </NavLink>
+                                    <NavLink
+                                        to="/register"
+                                        className="px-5 py-2 text-sm font-medium bg-[#ffde59] text-black rounded-lg hover:bg-yellow-400 transition-all active:scale-95"
+                                    >
+                                        Register
+                                    </NavLink>
+                                </div>
+                            )}
+
+                            {/* Mobile Menu Toggle */}
+                            <button
+                                onClick={handleMenuToggle}
+                                className="p-2 border border-[#ffde59] lg:hidden text-lg rounded-lg transition-colors"
+                            >
+                                <Motion.div
+                                    animate={{ rotate: menutoggle ? 90 : 0 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {menutoggle ? <IoClose /> : <IoMenuSharp />}
+                                </Motion.div>
+                            </button>
+                        </div>
+
+                    </nav>
+                    {/* Mobile Menu Overlay */}
                     <AnimatePresence>
                         {menutoggle && (
                             <Motion.div
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.2 }}
-                                className="absolute top-20 left-0 w-full bg-white dark:bg-neutral-900 shadow-lg flex flex-col text-gray-700 dark:text-gray-200 py-5 px-6 space-y-3 md:hidden"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="absolute w-full bg-neutral-50 dark:bg-neutral-800 rounded-b-lg block lg:hidden border-t border-t-neutral-200 dark:border-t-neutral-600 border-b-6 border-b-[#ffde59]"
                             >
-                                {links}
+                                <div className="flex flex-col justify-between gap-5 p-6">
+                                    <div className='flex flex-col'>
+                                        {links}
+                                    </div>
+                                    {/* <hr className="border-neutral-200 dark:border-neutral-800 my-2" /> */}
+                                    <div className="flex items-center justify-between pt-2">
+                                        <span className="text-sm font-medium">Switch Theme</span>
+                                        <ThemeToggle />
+                                    </div>
+                                </div>
                             </Motion.div>
                         )}
                     </AnimatePresence>
-
-                </nav>
+                </div>
             </Container>
-        </div>
+        </header >
     );
 };
 
